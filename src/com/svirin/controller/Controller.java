@@ -9,12 +9,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -41,6 +37,12 @@ public class Controller{
     private Button CancelButton;
     @FXML
     private ProgressBar ProcessingBar;
+    @FXML
+    private TextField NameLine;
+    @FXML
+    private TextField PathLine;
+    @FXML
+    private TextField SizeLine;
 
     @FXML
     private void initialize(){
@@ -84,6 +86,9 @@ public class Controller{
     private void calculateHash(){
         for(int i = 0; i < files.size(); ++i) {
             files.get(i).setState(States.PROCESSING.getState());
+            NameLine.setText(FileSelector.selectedFilesL.get(i).getName());
+            PathLine.setText(FileSelector.selectedFilesL.get(i).getFile().getAbsolutePath());
+            SizeLine.setText("" + FileSelector.selectedFilesL.get(i).getFile().length() + " bytes");
             try {
                 files.get(i).setHash(Main.md5(FileSelector.selectedFilesL.get(i).getFile().getAbsolutePath()));
             } catch (NoSuchAlgorithmException e) {

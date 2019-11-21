@@ -139,7 +139,8 @@ public class FileSelector {
             public void handle(ActionEvent event) {
                 ObservableList<FileEx> buffer = filesInDir.getSelectionModel().getSelectedItems();
                 for(FileEx x : buffer) {
-                    if (x != null && !containsFile(selectedFilesL, x)) {
+                    if (x != null && !containsFile(selectedFilesL, x)
+                            && !x.getFile().isDirectory()) {
                         selectedFilesL.add(x);
                         items++;
                     }
@@ -241,7 +242,10 @@ public class FileSelector {
         File[] files = dir.listFiles();
         for(File x : files){
             if(x.isDirectory()) addAll(x);
-            else selectedFilesL.add(new FileEx(x));
+            else {
+                selectedFilesL.add(new FileEx(x));
+                items++;
+            }
         }
     }
 
