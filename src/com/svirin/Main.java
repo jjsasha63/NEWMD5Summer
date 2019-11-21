@@ -21,7 +21,9 @@ import javafx.stage.Stage;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
@@ -42,6 +44,19 @@ public class Main extends Application {
         String myChecksum = DatatypeConverter
                 .printHexBinary(digest).toUpperCase();
         return myChecksum;
+    }
+    public byte[] createSha1(File file) throws Exception  {
+        MessageDigest digest = MessageDigest.getInstance("SHA-1");
+        InputStream fis = new FileInputStream(file);
+        int n = 0;
+        byte[] buffer = new byte[8192];
+        while (n != -1) {
+            n = fis.read(buffer);
+            if (n > 0) {
+                digest.update(buffer, 0, n);
+            }
+        }
+        return digest.digest();
     }
 
     //Creating the main window

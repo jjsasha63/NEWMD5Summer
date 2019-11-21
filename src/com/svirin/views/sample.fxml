@@ -19,19 +19,19 @@
       <AnchorPane layoutY="317.0" prefHeight="186.0" prefWidth="700.0" style="-fx-background-color: #424242;">
          <children>
             <ProgressBar fx:id="ProcessingBar" layoutX="239.0" layoutY="53.0" prefHeight="24.0" prefWidth="222.0" progress="0.0" style="-fx-border-color: #191619#191619;" />
-            <Label layoutX="239.0" layoutY="14.0" prefHeight="28.0" prefWidth="124.0" text="Processing:" textFill="#191619">
+            <Label layoutX="239.0" layoutY="14.0" prefHeight="28.0" prefWidth="124.0" text="Processing:" textFill="#b9adb9">
                <font>
                   <Font size="19.0" />
                </font>
             </Label>
-            <Label layoutX="513.0" layoutY="119.0" text="Size:" textFill="#191619" />
-            <Label layoutX="507.0" layoutY="68.0" text="Name:" textFill="#191619" />
-            <Label layoutX="511.0" layoutY="19.0" text="Path:" textFill="#191619" />
+            <Label layoutX="513.0" layoutY="119.0" text="Size:" textFill="#b9adb9" />
+            <Label layoutX="507.0" layoutY="68.0" text="Name:" textFill="#b9adb9" />
+            <Label layoutX="511.0" layoutY="19.0" text="Path:" textFill="#b9adb9" />
             <Button fx:id="SaveButton" layoutX="239.0" layoutY="122.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="102.0" style="-fx-background-color: #585858;" text="Save" textFill="#b9adb9" />
             <Button fx:id="CancelButton" layoutX="374.0" layoutY="122.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="94.0" style="-fx-background-color: #585858;" text="Close" textFill="#b9adb9" />
-             <TextField fx:id="SizeLine" layoutX="513.0" layoutY="137.0" style="-fx-background-color: #424242; -fx-text-fill: #fcba03;" />
-             <TextField fx:id="NameLine" layoutX="507.0" layoutY="86.0" style="-fx-background-color: #424242; -fx-text-fill: #fcba03;" />
-             <TextField fx:id="PathLine" layoutX="513.0" layoutY="40.0" style="-fx-background-color: #424242; -fx-text-fill: #fcba03;" />
+             <TextField fx:id="SizeLine" layoutX="513.0" layoutY="137.0" style="-fx-background-color: #424242; -fx-text-fill: #ac62ac;" />
+             <TextField fx:id="NameLine" layoutX="507.0" layoutY="86.0" style="-fx-background-color: #424242; -fx-text-fill: #ac62ac;" />
+             <TextField fx:id="PathLine" layoutX="513.0" layoutY="40.0" style="-fx-background-color: #424242; -fx-text-fill: #ac62ac;" />
             <GridPane layoutX="14.0" layoutY="5.0" prefHeight="177.0" prefWidth="200.0" style="-fx-background-color: #424242;">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="89.20001220703125" minWidth="10.0" prefWidth="40.4000244140625" />
@@ -45,16 +45,16 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="Key:" textFill="#191619" />
+                  <Label text="Key:" textFill="#b9adb9" />
                   <Circle fill="WHITE" radius="14.0" stroke="BLACK" strokeType="INSIDE" GridPane.rowIndex="1" />
                   <Circle fill="GREEN" radius="14.0" stroke="BLACK" strokeType="INSIDE" GridPane.rowIndex="2" />
                   <Circle fill="ORANGE" radius="14.0" stroke="BLACK" strokeType="INSIDE" GridPane.rowIndex="3" />
                   <Circle fill="RED" radius="14.0" stroke="BLACK" strokeType="INSIDE" GridPane.rowIndex="4" />
-                  <Label text="Unprocessed" textFill="#191619" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <Label text="OK\Done" textFill="#191619" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label text="Unprocessed" textFill="#b9adb9" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label text="OK\Done" textFill="#b9adb9" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <Label text="Processing" textFill="#191619" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <Label text="Error (0 so far)" textFill="#191619" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Label text="Processing" textFill="#b9adb9" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Label text="Error (0 so far)" textFill="#b9adb9" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                </children>
                <padding>
                   <Insets left="10.0" />
@@ -65,8 +65,8 @@
       <TableView fx:id="tableFiles" prefHeight="318.0" prefWidth="700.0" style="-fx-background-color: #585858;">
         <columns>
           <TableColumn fx:id="stateColumn" prefWidth="48.799986243247986" style="-fx-background-color: #585858;" styleClass="-fx-background-color" text="State" />
-          <TableColumn fx:id="idColumn" prefWidth="240.79999387264252" style="-fx-text-fill: #fcba03; -fx-background-color: #585858;" text="File" />
-            <TableColumn fx:id="hashColumn" prefWidth="410.3999938964844" style="-fx-background-color: #585858; -fx-text-fill: #fcba03;" text="MD5 Hash" />
+          <TableColumn fx:id="idColumn" prefWidth="240.79999387264252" style="-fx-text-fill: #ac62ac; -fx-background-color: #585858;" text="File" />
+            <TableColumn fx:id="hashColumn" prefWidth="410.3999938964844" style="-fx-background-color: #585858; -fx-text-fill: #ac62ac;" text="MD5 Hash" />
         </columns>
       </TableView>
    </children> 
