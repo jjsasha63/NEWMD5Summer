@@ -13,6 +13,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -31,6 +33,7 @@ public class Main extends Application {
     public static Stage mainWindow;
     public static Stage fileSelection;
     public static Stage processing;
+    public static boolean algorithm;
     String gdirectory = new String();
     File dir;
 
@@ -43,7 +46,9 @@ public class Main extends Application {
                 .printHexBinary(digest).toUpperCase();
         return myChecksum;
     }
-    public byte[] createSha1(File file) throws Exception  {
+    public static String createSha1(String filename)
+            throws NoSuchAlgorithmException, IOException {
+        File file = new File(filename);
         MessageDigest digest = MessageDigest.getInstance("SHA-1");
         InputStream fis = new FileInputStream(file);
         int n = 0;
@@ -54,7 +59,7 @@ public class Main extends Application {
                 digest.update(buffer, 0, n);
             }
         }
-        return digest.digest();
+        return DatatypeConverter.printHexBinary(digest.digest()).toUpperCase();
     }
 
     //Creating the main window
@@ -67,22 +72,29 @@ public class Main extends Application {
         VBox folderPane = new VBox();
 
         Label sumTypeL = new Label("Checksum type:");
+        sumTypeL.setStyle("-fx-text-fill: #b9adb9");
         ObservableList<String> sumTypeA = FXCollections.observableArrayList("MD5", "SHA1");
         ComboBox<String> sumTypeC = new ComboBox<>(sumTypeA);
         sumTypeC.setValue("MD5");
 
         Button createSum = new Button("Create sums");
+        createSum.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
         Button verify = new Button(" Verify sums ");
+        verify.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
         Button about = new Button("About");
+        about.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
 
         DirectoryChooser dc = new DirectoryChooser();
         FileChooser fc = new FileChooser();
         Label enterDir = new Label("Please, enter the path to the root folder:");
+        enterDir.setStyle("-fx-text-fill: #b9adb9");
         Label selectDir = new Label("or select the root folder:");
+        selectDir.setStyle("-fx-text-fill: #b9adb9");
         TextField directoryT = new TextField();
         TextArea anotherDirectory = new TextArea();
         directoryT.setMaxSize(170, 70);
         Button selectDirB = new Button("Select Folder");
+        selectDirB.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
 
         //opens directory-chooser and then searching all files in selected directory
         selectDirB.setOnAction(new EventHandler<ActionEvent>() {
@@ -97,6 +109,10 @@ public class Main extends Application {
         createSum.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                if(sumTypeC.getSelectionModel().getSelectedItem() == "MD5")
+                    algorithm = true;
+                else
+                    algorithm = false;
                 File dir = new File(directoryT.getText());
                 directoryT.setText("");
                 FileSelector fs = new FileSelector(dir);
@@ -113,6 +129,11 @@ public class Main extends Application {
         verify.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                if(sumTypeC.getSelectionModel().getSelectedItem() == "MD5")
+                    algorithm = true;
+                else
+                    algorithm = false;
+                dir = new File(directoryT.getText());
                 fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("MD5 files (*.md5)", "*.md5"));
                 File dir1 = fc.showOpenDialog(primaryStage);
                 if(dir1 == null) return;
@@ -160,6 +181,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage){
         Group g = new Group();
+        Rectangle background = new Rectangle(310, 310, Color.web("#424242"));
+        g.getChildren().add(background);
         g.getChildren().add(initDirectorySelection(primaryStage));
         Scene scene = new Scene(g, 300, 300);
 
@@ -168,15 +191,6 @@ public class Main extends Application {
         mainWindow.setTitle("MD5Summer");
         mainWindow.setResizable(false);
         mainWindow.show();
-        //TODO: delete this code after testing the file-choser window
-        //File dir = new File("C:/YOU_DIED");
-        //FileSelector fs = new FileSelector(dir);
-        //fs.buildingWindow();
-        //fileSelection = fs.getSelectorStage();
-        //fileSelection.show();
-        //ProcessingWin pw = new ProcessingWin();
-        //processing = pw.getProcessStage();
-        //processing.show();
     }
 
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
