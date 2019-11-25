@@ -31,7 +31,7 @@ import java.io.File;
 public class FileSelector {
     private ObservableList<FileEx> filesInDirL;
     public static ObservableList<FileEx> selectedFilesL = FXCollections.observableArrayList();
-    private File rootDirectory;
+    public static File rootDirectory;
     private File nextDir;
     private Stage selectorStage = new Stage();
     private int items = 0;
