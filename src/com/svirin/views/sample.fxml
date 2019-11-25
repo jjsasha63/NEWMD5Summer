@@ -54,7 +54,7 @@
                   <Label text="OK\Done" textFill="#b9adb9" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <Label text="Processing" textFill="#b9adb9" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <Label text="Error (0 so far)" textFill="#b9adb9" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Label text="Error" textFill="#b9adb9" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                </children>
                <padding>
                   <Insets left="10.0" />
