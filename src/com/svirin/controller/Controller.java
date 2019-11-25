@@ -61,12 +61,16 @@ public class Controller{
     }
 
     private void initData(){
-        if(!key)
-            for(FileEx x : FileSelector.selectedFilesL)
+        if(!key) {
+            hashColumn.setId("MD5 Hash");
+            for (FileEx x : FileSelector.selectedFilesL)
                 files.add(new FilePOJO(x.getName()));
-        else
-            for(int i = 0; i < Data.names.size(); ++i)
+        }
+        else {
+            hashColumn.setId("SHA-1 Hash");
+            for (int i = 0; i < Data.names.size(); ++i)
                 files.add(new FilePOJO(Data.names.get(i)));
+        }
 
     }
 
@@ -113,7 +117,10 @@ public class Controller{
             PathLine.setText(FileSelector.selectedFilesL.get(i).getFile().getAbsolutePath());
             SizeLine.setText("" + FileSelector.selectedFilesL.get(i).getFile().length() + " bytes");
             try {
-                files.get(i).setHash(Main.md5(FileSelector.selectedFilesL.get(i).getFile().getAbsolutePath()));
+                if(Main.algorithm)
+                    files.get(i).setHash(Main.md5(FileSelector.selectedFilesL.get(i).getFile().getAbsolutePath()));
+                else
+                    files.get(i).setHash(Main.createSha1(FileSelector.selectedFilesL.get(i).getFile().getAbsolutePath()));
             } catch (NoSuchAlgorithmException e) {
                 files.get(i).setState(States.ERROR.getState());
                 continue;
@@ -137,7 +144,7 @@ public class Controller{
         for(int i = 0; i < files.size(); ++i) {
             writer.write(files.get(i).getHash() + " " + "*" +
                     FileSelector.selectedFilesL.get(i).getFile().
-                            getAbsolutePath().replace(FileSelector.rootDirectory.getAbsolutePath(), "") + "\n");
+                            getAbsolutePath().replace(FileSelector.rootDirectory.getAbsolutePath().substring(1), "") + "\n");
         }
         writer.close();
     }
