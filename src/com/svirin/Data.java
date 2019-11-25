@@ -35,36 +35,25 @@ public class Data {
         BufferedReader reader = new BufferedReader(new FileReader(md5));
         //adding ONLY files, without directories
         List<String> files = new ArrayList<>();
-        for(File x : temp.listFiles())
-            if(!x.isDirectory()) files.add(x.getAbsolutePath());
-        rootfile += "\\";
-        int i = 0;
-        for(String a : files){
-            a = a.replace(rootfile,"");
-            finalstr.add(i," *" + a);
-            i++;
-        }
-
-         i = 0;
-        for (String a : files) {
-            a = Main.md5(a);
-            files.set(i, a);
-            i++;
-        }
-        for (i = 0;i<files.size();i++) {
-            finalstr.set(i,files.get(i) + finalstr.get(i));//string like "<hash> *filename"
-        }
-
         while ((line = reader.readLine()) != null) {
             lines.add(line);
         }
-
+        for(int i = 3; i < lines.size(); ++i)
+            finalstr.add(lines.get(i).substring(33));
+        int i = 0;
+        for (String a : finalstr) {
+            if(Main.algorithm)
+                finalstr.set(i, Main.md5(rootfile + "\\" + a.substring(1)) + " " + finalstr.get(i));//string like "<hash> *filename"
+            else
+                finalstr.set(i, Main.createSha1(rootfile + "\\" + a.substring(1)) + " " + finalstr.get(i));//string like "<hash> *filename"
+            i++;
+        }
     //    String[] md5hashes = lines.toArray(new String[lines.size()]);
         //check for equality
         int z = 0;
-        for( i=1;i<lines.size();i++){
+        for( i=3;i<lines.size();i++){
             for(int k=0;k<finalstr.size();k++){
-                if(lines.get(i).equals(finalstr.get(k))) {
+                if(lines.get(i).toUpperCase().equals(finalstr.get(k).toUpperCase())){
                     state.add(true);
                     names.add(lines.get(i).substring(33));
                     hashes.add(finalstr.get(k).replace(names.get(z),""));
