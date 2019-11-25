@@ -1,5 +1,6 @@
 package com.svirin.controller;
 
+import com.sun.deploy.security.SelectableSecurityManager;
 import com.svirin.*;
 import com.svirin.POJO.FilePOJO;
 import javafx.collections.FXCollections;
@@ -22,7 +23,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 public class Controller{
+    //false - fileselector, true - data
+    public static boolean key = false;
     private ObservableList<FilePOJO> files = FXCollections.observableArrayList();
+    private ObservableList<FilePOJO> empty = FXCollections.observableArrayList();
     @FXML
     private TableView<FilePOJO> tableFiles;
     @FXML
@@ -57,8 +61,13 @@ public class Controller{
     }
 
     private void initData(){
-        for(FileEx x : FileSelector.selectedFilesL)
-            files.add(new FilePOJO(x.getName()));
+        if(!key)
+            for(FileEx x : FileSelector.selectedFilesL)
+                files.add(new FilePOJO(x.getName()));
+        else
+            for(int i = 0; i < Data.names.size(); ++i)
+                files.add(new FilePOJO(Data.names.get(i)));
+
     }
 
     private void controllingWindow(){
@@ -75,12 +84,26 @@ public class Controller{
         CancelButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                files.remove(0, files.size());
+                files.clear();
+                Data.names.clear();
+                Data.state.clear();
+                Data.hashes.clear();
+                tableFiles.refresh();
                 Main.processing.close();
                 Main.mainWindow.show();
             }
         });
-        calculateHash();
+        if(!key)
+            calculateHash();
+        else{
+            for(int i = 0; i < files.size(); ++i){
+                if(Data.state.get(i))
+                    files.get(i).setState(States.OK.getState());
+                else
+                    files.get(i).setState(States.ERROR.getState());
+                files.get(i).setHash(Data.hashes.get(i));
+            }
+        }
     }
 
     private void calculateHash(){
@@ -110,9 +133,11 @@ public class Controller{
         File file = fc.showSaveDialog(Main.processing);
         if(file == null) return;
         FileWriter writer = new FileWriter(file);
-        writer.write("#Genereted " + new Date().toString() + "\n");
+        writer.write("#Genereted " + new Date().toString() + "\n\n\n");
         for(int i = 0; i < files.size(); ++i) {
-            writer.write(files.get(i).getHash() + " " + "*" + files.get(i).getName() + "\n");
+            writer.write(files.get(i).getHash() + " " + "*" +
+                    FileSelector.selectedFilesL.get(i).getFile().
+                            getAbsolutePath().replace(FileSelector.rootDirectory.getAbsolutePath(), "") + "\n");
         }
         writer.close();
     }
