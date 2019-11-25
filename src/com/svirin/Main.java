@@ -1,5 +1,6 @@
 package com.svirin;
 
+import com.svirin.controller.Controller;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,10 +9,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -81,7 +79,7 @@ public class Main extends Application {
         FileChooser fc = new FileChooser();
         Label enterDir = new Label("Please, enter the path to the root folder:");
         Label selectDir = new Label("or select the root folder:");
-        TextArea directoryT = new TextArea();
+        TextField directoryT = new TextField();
         TextArea anotherDirectory = new TextArea();
         directoryT.setMaxSize(170, 70);
         Button selectDirB = new Button("Select Folder");
@@ -93,7 +91,7 @@ public class Main extends Application {
                  dir = dc.showDialog(primaryStage);
                 if(dir == null) return;
                 directoryT.setText(dir.getAbsolutePath());
-                gdirectory = directoryT.getText();
+                //gdirectory = directoryT.getText();
             }
         });
         createSum.setOnAction(new EventHandler<ActionEvent>() {
@@ -108,17 +106,19 @@ public class Main extends Application {
                 mainWindow.close();
                 fileSelection = fs.getSelectorStage();
                 fileSelection.show();
+                Controller.key = false;
             }
         });
 
         verify.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("MD5 files (*.md5)", "*.md5"));
                 File dir1 = fc.showOpenDialog(primaryStage);
                 if(dir1 == null) return;
                 anotherDirectory.setText(dir1.getAbsolutePath());
                 String md5directory = anotherDirectory.getText();
-                Data data = new Data(dir,md5directory,gdirectory);
+                Data data = new Data(dir, md5directory, dir.getAbsolutePath());
                 try {
                     data.transform();
                     //data.md5file();
