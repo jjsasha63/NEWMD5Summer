@@ -65,6 +65,8 @@ public class FileSelector {
 
     public void buildingWindow(){
         //adding labels "Folders:" and "Number of items"
+        folders.setStyle("-fx-text-fill: #b9adb9");
+        numberOfItems.setStyle("-fx-text-fill: #b9adb9");
         labelsFlowPane.getChildren().addAll(folders, numberOfItems);
         labelsFlowPane.setHgap(200);
         labelsFlowPane.setPadding(new Insets(5, 0, 0, 100));
@@ -113,11 +115,17 @@ public class FileSelector {
 
         //adding buttons
         selectAll.setMinWidth(150);
+        selectAll.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
         clearList.setMinWidth(150);
+        clearList.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
         add.setMinWidth(150);
+        add.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
         addRec.setMinWidth(150);
+        addRec.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
         ok.setMinWidth(100);
+        ok.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
         cancel.setMinWidth(100);
+        cancel.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
         selectAll.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -201,7 +209,7 @@ public class FileSelector {
         gp.add(buttonsGridPane, 0, 0);
         bp.setBottom(gp);
 
-        Rectangle background = new Rectangle(620, 420, new Color(0.64, 0.63, 0.61, 0.65));
+        Rectangle background = new Rectangle(620, 420, Color.web("#424242"));
         Group g = new Group();
         g.getChildren().add(background);
         g.getChildren().add(bp);
