@@ -142,9 +142,11 @@ public class Controller{
         FileWriter writer = new FileWriter(file);
         writer.write("#Genereted " + new Date().toString() + "\n\n\n");
         for(int i = 0; i < files.size(); ++i) {
+            String name = FileSelector.selectedFilesL.get(i).getFile().
+                    getAbsolutePath().replace(FileSelector.rootDirectory.getAbsolutePath(), "");
+            name = name.substring(1);
             writer.write(files.get(i).getHash() + " " + "*" +
-                    FileSelector.selectedFilesL.get(i).getFile().
-                            getAbsolutePath().replace(FileSelector.rootDirectory.getAbsolutePath().substring(1), "") + "\n");
+                    name + "\n");
         }
         writer.close();
     }
