@@ -237,32 +237,48 @@ public class Main extends Application {
         grid.add(about, 2, 1);
         //Встановлення сірої рамки навколо контейнера
         grid.setStyle("-fx-border-color: gray");
-        grid.setHgap(5); //Встановлення відступу
-        grid.setVgap(5); //vertical gap in pixels
-        grid.setPadding(new Insets(5, 5, 5, 5));
-
-        pane.setBottom(grid);
-        pane.setTop(enterDir);
-        pane.setCenter(folderPane);
+        grid.setHgap(5); //Встановлення відступу між стовпчиками - 5 пікселів
+        grid.setVgap(5); //Встановлення відступу між рядками - 5 пікселів
+        grid.setPadding(new Insets(5, 5, 5, 5));//Відступи для контейнера відносно сторін вікна
+        //Прив'язка контейнерів до сторін вікна:
+        pane.setBottom(grid);//до нижньої частини
+        pane.setTop(enterDir);//до верхньої
+        pane.setCenter(folderPane);//до центру
+        //повертаємо контейнер з усіма елементами інтерфейсу
         return pane;
     }
-
+    //Вхідна точка побудови додатку JavaFX. Виконуюче середовище JavaFX під час виклику цього методу передає до нього
+    //створений об'єкт Stage - сцену
     @Override
     public void start(Stage primaryStage){
+        //Група компонентів, за допомогою яких користувач керує додатком. За правилом театру - група акторів постановки
         Group g = new Group();
+        //Прямокутник розміром 310, 310 с кольором заливки #424242, що є фоном всього додатку
         Rectangle background = new Rectangle(310, 310, Color.web("#424242"));
+        //Додаємо фон до групи
         g.getChildren().add(background);
+        //Додаємо компоненти до групи
         g.getChildren().add(initDirectorySelection(primaryStage));
+        //Створюємо об'єкт класу Scene, конструктор якого приймає контейнер з елементами та розмір вікна. За правилом
+        //театру - це постанова, до якої ми додаємо групу акторів (контейнер з елементами інтерфейсу)
         Scene scene = new Scene(g, 300, 300);
-
+        //
         mainWindow = primaryStage;
+        //Додаємо на сцену постанову
         mainWindow.setScene(scene);
+        //Додаємо заголовок вікна
         mainWindow.setTitle("MD5Summer");
+        //Метод, що дозволяє зробити вікно незмінним за розміром. Для цього слід передати false в якості аргумента
         mainWindow.setResizable(false);
+        //Робимо вікно видимим
         mainWindow.show();
     }
-
+    //Точка входу в програму, args - аргументи командного рядка
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
+        //Статичний метод launch класу Application, після якого відбуваються виклики методів, що потрібні для побудови
+        //додатку JavaFX. Клас Application викликає для цього наступні методи: init() - ініціалізує додаток до його
+        //фактичного створення (не слід використовувати для побудови інтерфейсу) та start(), в якому  визначається
+        //графічний інтерфейс.
 	    Application.launch(args);
     }
 }
