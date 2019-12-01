@@ -27,7 +27,7 @@ public class ProcessingWin {
         Scene sc = new Scene(ap);
         processStage = new Stage();
         processStage.setScene(sc);
-        processStage.setResizable(true);
+        //processStage.setResizable(true);
     }
 
     public Stage getProcessStage(){
