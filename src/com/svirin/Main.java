@@ -164,8 +164,10 @@ public class Main extends Application {
                     algorithm = true;
                 else
                     algorithm = false;
-                
+                //Створення об'єкту класу File, що буде кореневою директорією, хеш-суми файлів з якої будут підраховуватися
+                //Шлях до кореневої директорії отримується з текстового поля
                 File dir = new File(directoryT.getText());
+                //Після отримання шляху -
                 directoryT.setText("");
                 FileSelector fs = new FileSelector(dir);
                 fs.buildingWindow();
