@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Path;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -26,7 +27,6 @@ public class Controller{
     //false - fileselector, true - data
     public static boolean key = false;
     private ObservableList<FilePOJO> files = FXCollections.observableArrayList();
-    private ObservableList<FilePOJO> empty = FXCollections.observableArrayList();
     @FXML
     private TableView<FilePOJO> tableFiles;
     @FXML
@@ -51,7 +51,9 @@ public class Controller{
     @FXML
     private void initialize(){
         initData();
-
+        NameLine.setEditable(false);
+        PathLine.setEditable(false);
+        SizeLine.setEditable(false);
         stateColumn.setCellValueFactory(new PropertyValueFactory<FilePOJO, Circle>("state"));
         idColumn.setCellValueFactory(new PropertyValueFactory<FilePOJO, String>("name"));
         hashColumn.setCellValueFactory(new PropertyValueFactory<FilePOJO, String>("hash"));
@@ -62,14 +64,13 @@ public class Controller{
 
     private void initData(){
         if(!key) {
-            hashColumn.setId("MD5 Hash");
             for (FileEx x : FileSelector.selectedFilesL)
                 files.add(new FilePOJO(x.getName()));
         }
         else {
-            hashColumn.setId("SHA-1 Hash");
             for (int i = 0; i < Data.names.size(); ++i)
                 files.add(new FilePOJO(Data.names.get(i)));
+            ProcessingBar.setProgress(1);
         }
 
     }
