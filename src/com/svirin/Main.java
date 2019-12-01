@@ -126,29 +126,45 @@ public class Main extends Application {
         Label selectDir = new Label("or select the root folder:");
         //Встановлення кольору тексту, що рівний #b9adb9
         selectDir.setStyle("-fx-text-fill: #b9adb9");
+        //Створення текстового поля, в якому можна написати шлях до кореневої папки
         TextField directoryT = new TextField();
         TextArea anotherDirectory = new TextArea();
+        //Встановлення максимального розміру текстового поля - ширина - 170 пікселів, висота - 70 пікселів
         directoryT.setMaxSize(170, 70);
+        //Створення кнопки, що відкриватиме вікно вибору кореневої папки
         Button selectDirB = new Button("Select Folder");
+        //Встановлення кольору заднього фону, що рівний #585858 та кольору тексту, що рівний #b9adb9
         selectDirB.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
 
-        //opens directory-chooser and then searching all files in selected directory
+        //Встановлення опрацьовувача подій на кнопку, за допомогою якої вибирається коренева директорія. Для цього слід
+        //викликати метод setOnAction, в який передається реалізація інтерфейсу EventHandler.
+        // У методі handle визначаються дії, які будуть викликатися при натисканні на кнопку
         selectDirB.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                //Відкриваємо вікно вибору директорії методом showDialog, в який передається вікно програми.
+                //Повертає повний шлях до директорії.
                  dir = dc.showDialog(primaryStage);
+                 //Якщо сталася помилка або доступ до папки заборонений, то змінна dir дорівнюватиме null.
+                //В цьому випадку - завершення роботи опрацьовувача події.
                 if(dir == null) return;
+                //Якщо вибрана директорія існує і доступ дозволено - вставляємо повний шлях до директорії у текстове поле
+                //щоб користувач бачив шлях. Для отримання повного шляху викликається метод getAbsolutePath класу File
                 directoryT.setText(dir.getAbsolutePath());
-                //gdirectory = directoryT.getText();
             }
         });
+        //Встановлення опрацьовувача подій на кнопку, за допомогою якої вибирається функція створення хеш-суми файлу
         createSum.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                //Зчитуємо вибраний елемент з випадаючого списку. Для цього слід отримати модель вибору методом
+                //getSelectionModel, після чого отримати вибраний елемент методом getSelectedItem. Якщо вибраний алгоритм -
+                //MD5, то присвоюємо змінній algorithm - true, інакше - false
                 if(sumTypeC.getSelectionModel().getSelectedItem() == "MD5")
                     algorithm = true;
                 else
                     algorithm = false;
+                
                 File dir = new File(directoryT.getText());
                 directoryT.setText("");
                 FileSelector fs = new FileSelector(dir);
