@@ -38,14 +38,18 @@ public class Data {
         while ((line = reader.readLine()) != null) {
             lines.add(line);
         }
-        for(int i = 3; i < lines.size(); ++i)
-            finalstr.add(lines.get(i).substring(33));
+        for(int i = 3; i < lines.size(); ++i) {
+            if(Main.algorithm)
+                finalstr.add(lines.get(i).substring(33));
+            else
+                finalstr.add(lines.get(i).substring(41));
+        }
         int i = 0;
         for (String a : finalstr) {
             if(Main.algorithm)
                 finalstr.set(i, Main.md5(rootfile + "\\" + a.substring(1)) + " " + finalstr.get(i));//string like "<hash> *filename"
             else
-                finalstr.set(i, Main.createSha1(rootfile + "\\" + a.substring(1)) + " " + finalstr.get(i));//string like "<hash> *filename"
+                finalstr.set(i, Main.createSha1((rootfile + "\\" + a.substring(1))) + " " + finalstr.get(i));//string like "<hash> *filename"
             i++;
         }
     //    String[] md5hashes = lines.toArray(new String[lines.size()]);
@@ -55,7 +59,10 @@ public class Data {
             for(int k=0;k<finalstr.size();k++){
                 if(lines.get(i).toUpperCase().equals(finalstr.get(k).toUpperCase())){
                     state.add(true);
-                    names.add(lines.get(i).substring(33));
+                    if(Main.algorithm)
+                        names.add(lines.get(i).substring(33));
+                    else
+                        names.add(lines.get(i).substring(41));
                     hashes.add(finalstr.get(k).replace(names.get(z),""));
                     System.out.println(hashes.get(z));
                     z++;
