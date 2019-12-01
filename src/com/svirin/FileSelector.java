@@ -69,43 +69,73 @@ public class FileSelector {
     private FlowPane listsFlowPane = new FlowPane();
     //Конструктор класу. В якості аргументу приймає об'єкт класу File, що позначає кореневу папку
     public FileSelector(File directoryArg){
-        rootDirectory = directoryArg;//
-        nextDir = rootDirectory;
-        filesInDirL = FXCollections.observableArrayList();
+        rootDirectory = directoryArg;//Ініціалізуємо поле, що позначає кореневу папку, аргументом конструктора
+        nextDir = rootDirectory;//Ініціалізуємо поле, що позначає наступну директорію
+        filesInDirL = FXCollections.observableArrayList();//Створення масиву, що зберігає файли поточного каталогу
+        //Ініціалізація масиву, що зберігає файли поточного каталогу. Для цього використовується цикл for each.
+        //Загальний запис циклу: for(тип назва_зміної : масив або колекція). На кожній ітерація зміна, що вказана в
+        //дужках прийматиме значення наступного елемента масива. Даний цикл зручно використовувати для перебору масиву
         for(File x : rootDirectory.listFiles())
+            //Додаємо до масиву об'єкт FileEx, що є об'єктом типу File з розширеним функціоналом, методом add()
             filesInDirL.add(new FileEx(x));
     }
-
+    //Метод, що будує вікно вибору файлів - додаються елементи інтерфейсу та назначаються обробники подій
     public void buildingWindow(){
-        //adding labels "Folders:" and "Number of items"
+        //Встановлення кольору фону лейблів, що дорівнює #b9adb9
         folders.setStyle("-fx-text-fill: #b9adb9");
         numberOfItems.setStyle("-fx-text-fill: #b9adb9");
+        //Додаємо до контейнеру лейбли методом addAll
         labelsFlowPane.getChildren().addAll(folders, numberOfItems);
+        //Встановлення відступу між елементами контейнеру, що дорівнює 200 пікселів
         labelsFlowPane.setHgap(200);
+        //Встановлення відступу контейнера від лівого боку вікна в 100 пікселів, та від верху - 5 пікселів
         labelsFlowPane.setPadding(new Insets(5, 0, 0, 100));
+        //Закріплюємо контейнер з лейблами у верхній частині вікна
         bp.setTop(labelsFlowPane);
 
-        //adding ListViews
+        //Створюємо об'єкт класу ListView, що приймає в якості аргументу масив даних. Таким чином, вміст списку - це
+        //вміст переданого масиву
         filesInDir = new ListView<>(filesInDirL);
+        //Встановлення максимального розміру списку: висота - 250 пікселів, ширина - 200 пікселів
         filesInDir.setMaxHeight(250);
         filesInDir.setMaxWidth(200);
+        //Встановлення режиму вибору - множинний тип вибору, тобто можна вибрати більше однієї позиції
         filesInDir.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        //Стандартний вигляд елементу списку, що відображає просто рядок не підходить під цілі нашої програми.
+        //Метод setCellFactory дозволяє змінити зовнішній вигляд комірки списку. В якості аргументу приймає об'єкт
+        //класу, що наслідується від ListCell, тобто будь-яку реалізацію комірки. Інтерфейс Callback потрібний для
+        //заміни стандартної комірки. Метод call() буде викликатися при кожньому зверненні до аргументу, що передається
+        //в цей метод. call() повертає в аргумент методу setCellFactory нашу реалізацію комірки, що прописано в класі
+        //FileCell
         filesInDir.setCellFactory(new Callback<ListView<FileEx>, ListCell<FileEx>>() {
             @Override
             public ListCell<FileEx> call(ListView<FileEx> param) {
                 return new FileCell();
             }
         });
+        //Встановлення опрацьовувача події на список, що містить файли поточної директорії. Подія, що опрацьовується -
+        //натискання на кнопку миші. Потрібно зробити, щоб при подвійному кліку файл додавався до списку вибраних файлів
+        //або відкривалась вибрана директорія
         filesInDir.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                //Отримуємо кількість натискань на кнопку миші. Для цього викликаємо метод getClickCount об'єкту класу
+                //MouseEvent. Якщо кількість кліків не дорівнює 2, то робота опрацьовувача події завершується
                 if(event.getClickCount() != 2)
                     return;
+                //Якщо елемент списку, на який було натиснуто - не директорія, а файл, то програмно натискаємо кнопку,
+                //що додає обраний файл до списку обраних файлів. Для цього отримуємо модель вибору списку методом
+                //getSelectionModel(), з якої отримуємо вибраний елемент (getSelectedItem()). Клас FileEx має метод
+                //getFile(), що повертає одне зі свої полів - об'єкт класу File. Перевірити, чи цей об'єкт є директорією
+                //можливо викликом методу isDirectory(), що поверне істину, якщо об'єкт - це каталог.
                 else if(!filesInDir.getSelectionModel().getSelectedItem().getFile().isDirectory()) {
-                    add.fire();
+                    add.fire();//Метод fire() дозволяє програмно натиснути кнопку
                     return;
                 }
+                //Якщо вибраний об'єкт - директорія, то присвоюємо зміній nextDir вибраний каталог
                 nextDir = filesInDir.getSelectionModel().getSelectedItem().getFile();
+                //Виклик методу, що змінює вміст списку файлів каталогу. Видаляє поточний вміст та додає до списку
+                //файли\директорії
                 setFilesObList();
                 filesInDir.refresh();
                 selectedFiles.refresh();
