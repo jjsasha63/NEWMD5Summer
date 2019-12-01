@@ -1,5 +1,5 @@
-package com.svirin;
-
+package com.svirin;//директива package вказує на назву пакету (бібліотеки), до якої відноситься даний клас
+//імпорт (підключення) пакетів (бібліотек), що містять потрібні елементи інтерфейсу та класи
 import com.svirin.controller.Controller;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -28,15 +28,23 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
+//Основний клас програми. Він повинен бути нащадком класу Application, що містить метод start(). Цей метод є
+//вхідною точкою для побудови додатку JavaFX. Директива extends вказує на наслідування. Рядок "Main extends Application"
+//означає, що клас Main розширяється класом Application, тобто наслідується від нього.
 public class Main extends Application {
-    public static Stage mainWindow;
-    public static Stage fileSelection;
-    public static Stage processing;
-    public static boolean algorithm;
-    String gdirectory = new String();
+    //директива static вказує на поле класу, що матиме лише ОДИН екземпляр, незалежно від кількості об'єктів класу.
+    //Таке поле може бути доступним навіть якщо не було створено жодного об'єкту. В такій ситуації доступ до статичного
+    //поля здійснюється наступним чином: Назва_класу.назва_поля (наприклад Main.mainWindow).
+    public static Stage mainWindow;//Основне вікно програми, де користувач вибирає тип хешування та функцію (створити
+                                   //хеш-суму або перевірити хеш-суму).
+    public static Stage fileSelection;//Вікно вибору файлів з кореневої директорії, хеш яких потрібно створити
+    public static Stage processing;//Вікно з результатом роботи програми - таблиця з назвами файлів, хеш-сумами та станом роботи(успішно\помилка...)
+    public static boolean algorithm;//Тип алгоритму хешування (true - MD5, false - SHA-1)
     File dir;
-
+    //Статичний метод, що рахує хеш-суму файлу за алгоритмом md5. В якості аргументу приймає рядок - шлях до файлу. Повертає рядок - хеш-суму
+    //файлу. Директива throws означає, що метод НЕ опрацьовує виключення, що можуть статися під час роботи, і при виклику
+    //цього методу потрібно опрацювати можливі виключення. NoSuchAlgorithmException - алгоритм хешування не існує, або
+    //не доступний, IOException - виникла помилка вводу\виводу, в даній ситуації - файл не існує.
     public static String md5(String filename)
             throws NoSuchAlgorithmException, IOException {
         MessageDigest md = MessageDigest.getInstance("MD5");
@@ -46,6 +54,8 @@ public class Main extends Application {
                 .printHexBinary(digest).toUpperCase();
         return myChecksum;
     }
+    //Статичний метод, що рахує хеш-суму за алгоритмом SHA-1. Аргумент той же, що в минулому методі. Повертає рядок -
+    //хеш-суму файлу.
     public static String createSha1(String filename)
             throws NoSuchAlgorithmException, IOException {
         File file = new File(filename);
@@ -62,33 +72,59 @@ public class Main extends Application {
         return DatatypeConverter.printHexBinary(digest.digest()).toUpperCase();
     }
 
-    //Creating the main window
+    //Метод, що "будує" основне вікно - додаються елементи інтерфейсу та назначаються обробники подій. В якості аргументу
+    //отримує основне вікно програми. Повертає BorderPane - контейнерний елемент, що містить всі інші елементи інтерфейсу.
     private BorderPane initDirectorySelection(Stage primaryStage){
-        //Building the window
+        //Створення контейнеру, до якого додаватимуться всі елементи інтерфейсу вікна. Це контейнер, в якому елементи
+        //"притискаються" до однієї зі сторін вікна - верх, низ, центр, ліва сторона вікна, права сторона вікна.
         BorderPane pane = new BorderPane();
-        pane.setMinWidth(300);
-        pane.setMinHeight(300);
+        //Встановлення мінімальних розмірів контейнеру - 300х300 пікселів.
+        pane.setMinWidth(300);//встановлення мінімальної ширини
+        pane.setMinHeight(300);//встановлення мінімальної висоти
+        //Контейнер, шо працює за принципом таблиці - елементи додаються до комірок, що характеризуються
+        //номером рядка таблиці та номером стовпчика.
         GridPane grid = new GridPane();
+        //Контейнер, що є простим списком - елементи додаються один за одним вертикально - вниз.
         VBox folderPane = new VBox();
-
+        //Елемент інтерфейсу Label - відображає напис "Checksum type:"
         Label sumTypeL = new Label("Checksum type:");
+        //Метод, що встановлює стиль елементу інтерфейсу. Приймає CSS код. В даному випадку цей код встановлює
+        //колір шрифту рівним #b9adb9
         sumTypeL.setStyle("-fx-text-fill: #b9adb9");
+        //Створення масиву, що дозволяє відстежувати зміни, що відбуваються з масивом, тобто можна встановити
+        //прослуховувач. В даному випадку масив зберігає 2 елементи - назви алгоритмів хешування.
         ObservableList<String> sumTypeA = FXCollections.observableArrayList("MD5", "SHA1");
+        //Створення випадаючого списку, що містить в собі елементи масиву, створеного рядок тому. Тобто, у випадаючому
+        //списку можна вибрати тип хешування, що буде проводитись.
         ComboBox<String> sumTypeC = new ComboBox<>(sumTypeA);
+        //Встановлюємо елемент за замовчуванням. Тобто, рядок "MD5" буде вибрано одразу.
         sumTypeC.setValue("MD5");
-
+        //Створення кнопки, що містить напис "Create sums". За допомогою цієї кнопки користувач вибирає функцію створення
+        //хеш-суми файлу\файлів.
         Button createSum = new Button("Create sums");
+        //Встановлення кольору заднього фону, що рівний #585858 та кольору тексту, що рівний #b9adb9
         createSum.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
+        //Створення кнопки, що містить напис "Verify sums". За допомогою цієї кнопки користувач вибирає функцію перевірки
+        //хеш-суми файлу\файлів
         Button verify = new Button(" Verify sums ");
+        //Встановлення кольору заднього фону, що рівний #585858 та кольору тексту, що рівний #b9adb9
         verify.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
+        //Створення кнопки, що містить напис "About". За допомогою цієї кнопки користувач вибирає функцію, що відкриває
+        //інформацію про програму
         Button about = new Button("About");
+        //Встановлення кольору заднього фону, що рівний #585858 та кольору тексту, що рівний #b9adb9
         about.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
-
+        //Створення елементу інтерфейсу, що дозволяє вибрати директорію
         DirectoryChooser dc = new DirectoryChooser();
+        //Створення елементу інтерфейсу, що дозволяє вибрати файл
         FileChooser fc = new FileChooser();
+        //Елемент інтерфейсу Label - відображає напис "Please, enter the path to the root folder:"
         Label enterDir = new Label("Please, enter the path to the root folder:");
+        //Встановлення кольору тексту, що рівний #b9adb9
         enterDir.setStyle("-fx-text-fill: #b9adb9");
+        //Елемент інтерфейсу Label - відображає напис "or select the root folder:"
         Label selectDir = new Label("or select the root folder:");
+        //Встановлення кольору тексту, що рівний #b9adb9
         selectDir.setStyle("-fx-text-fill: #b9adb9");
         TextField directoryT = new TextField();
         TextArea anotherDirectory = new TextArea();
