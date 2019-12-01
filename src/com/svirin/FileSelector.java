@@ -1,9 +1,7 @@
-package com.svirin;
-
-import com.svirin.controller.Controller;
+package com.svirin;//директива package вказує на назву пакету (бібліотеки), до якої відноситься даний клас
+//імпорт (підключення) пакетів (бібліотек), що містять потрібні елементи інтерфейсу та класи
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -12,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -21,42 +18,58 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
-
+//Клас FileSelector будує вікно вибору файлів, хеш-суми яких потрібно підрахувати
 public class FileSelector {
+    //масив файлів, що містяться в директорії
     private ObservableList<FileEx> filesInDirL;
+    //масив файлів, що було вибрано для підрахунку хеш-сум
     public static ObservableList<FileEx> selectedFilesL = FXCollections.observableArrayList();
+    //об'єкт класу File, що позначає кореневу директорію, з якої вибиратимуться файли
     public static File rootDirectory;
+    //Об'єкт класу File, що позначає наступну директорію, з якої вибиратимуться файли
     private File nextDir;
+    //Вікно програми, за правилом театру - сцена
     private Stage selectorStage = new Stage();
+    //Кількість вибраних файлів
     private int items = 0;
+    //Рядок, який відображатиметься на екрані та показуватиме користувачу кількість обраних файлів
     private String itemsStr = "Number of items: ";
-    //Interface elements of the window
+    //Кнопка, за допомогою якої можна буде вибрати всі файли з кореневої директорії та внутрішніх директорій
     private Button selectAll = new Button("Select all");
+    //Кнопка, за допомогою якої можно очистити список вибраних файлів
     private Button clearList = new Button("Clear list");
+    //Кнопка, за допомогою якої додається вибраний файл до списку
     private Button add = new Button("Add");
+    //Кнопка, що дозволяє додати всі файли с обраної директорії без відкриття цієї директорії
     private Button addRec = new Button("Add recursively");
+    //Кнопка, за допомогою якої відбувається перехід до наступного вікна - вікна підрахунку хеш-сум
     private Button ok = new Button("Ok");
+    //Кнопка скасування, що переносить на початкове вікно
     private Button cancel = new Button("Cancel");
+    //Елемент інтерфейсу - список, в якому знаходяться файли та папки обраної директорії.
+    //Клас ListView є шаблонним, в трикутних дужках вказується тип елементів, що зберігає список.
+    //В даному випадку списки зберігають об'єкти класу FileEx, який описано в однойменному файлі.
     private ListView<FileEx> filesInDir;
+    //Список, який зберігає вибрані для підрахунку хеш-сум файли
     private ListView<FileEx> selectedFiles;
+    //Лейбл, що виводить на екран напис "Folders:" та позначає список з файлами\папками обраної директорії
     private Label folders = new Label("Folders:");
+    //Лейбл, що виводить на екран напис "Number of items: n", де n - кількість обраних для підрахунку хеш-сум файлів
     private Label numberOfItems = new Label(itemsStr + items);
+    //Контейнер, що працює за принципом таблиці
     private GridPane gp = new GridPane();
+    //Контейнер, що дозволяє прив'язати елементи до сторін вікна додатку
     private BorderPane bp = new BorderPane();
+    //Контейнер, що працює за принципом таблиці. Зберігає всі кнопки вікна
     private GridPane buttonsGridPane = new GridPane();
+    //Контейнер, що послідовно додає елементи. Зберігає всі лейбли вікна
     private FlowPane labelsFlowPane = new FlowPane();
+    //Контейнер, що послідовно додає елементи. Зберігає всі списки вікна
     private FlowPane listsFlowPane = new FlowPane();
-
-
-
+    //Конструктор класу. В якості аргументу приймає об'єкт класу File, що позначає кореневу папку
     public FileSelector(File directoryArg){
-        rootDirectory = directoryArg;
+        rootDirectory = directoryArg;//
         nextDir = rootDirectory;
         filesInDirL = FXCollections.observableArrayList();
         for(File x : rootDirectory.listFiles())
