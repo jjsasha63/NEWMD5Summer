@@ -214,7 +214,7 @@ public class FileSelector {
                 items = selectedFilesL.size();
                 //Оновлюємо лейбл, що відображає на екрані кількість вибраних файлів
                 numberOfItems.setText(itemsStr + items);
-                //оновлюємо списки для коректного відображення змісту
+                //Оновлюємо списки для коректного відображення змісту
                 selectedFiles.refresh();
                 filesInDir.refresh();
             }
@@ -228,36 +228,60 @@ public class FileSelector {
                 //getSelectedItems() повертає масив ObservableList виділених елементів. В даній ситуації
                 //створюється буфер, що містить виділені елементи списку.
                 ObservableList<FileEx> buffer = filesInDir.getSelectionModel().getSelectedItems();
+                //Використовуємо цикл for-each для перебору масиву вибраних елементів
                 for(FileEx x : buffer) {
+                    //Перевірки: чи існує об'єкт (тобто, чи посилання на об'єкт не дорівнює null), чи вже не додано
+                    //об'єкт до масиву вибраних файлів і чи не є вибраний елемент списку директорією, а є файлом
                     if (x != null && !containsFile(selectedFilesL, x)
                             && !x.getFile().isDirectory()) {
+                        //Додаємо файл до списку обраних файлів методом add()
                         selectedFilesL.add(x);
+                        //Збільшуємо кількість вибраних файлів на одиницю
                         items++;
                     }
+                    //Якщо вибраний елемент - директорія, то додаємо всі файли з цієї директорії
                     else if(x.getFile().isDirectory()) addAll(x.getFile());
                 }
+                //Оновлюємо лейбл, що відображає на екрані кількість вибраних файлів
                 numberOfItems.setText(itemsStr + items);
+                //Оновлюємо списки для коректного відображення змісту
                 filesInDir.refresh();
                 selectedFiles.refresh();
             }
         });
+        //Встановлення опрацьовувача подій на кнопку, що додає всі файли з обраної директорії без переходу
+        //в цю директорію
         addRec.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                //Оскільки нам потрібен лише один елемент - директорія, то викликаємо метод getSelectedItem(),
+                //що поверне саме один вибраний елемент
                 FileEx buffer = filesInDir.getSelectionModel().getSelectedItem();
+                //Якщо вибраний елемент не є директорією - завершення роботи опрацьовувача
                 if(!buffer.getFile().isDirectory()) return;
+                //Щоб отримати масив всіх файлів каталогу, слід викликати метод listFiles() класу File, який
+                //працює для директорій. Записуємо результат роботи методу в масив.
                 File[] files = buffer.getFile().listFiles();
+                //Використовуємо цикл for-each для перебору масиву файлів вибраного каталогу
                 for(File x : files) {
+                    //Створюємо об'єкт класу FileEx, оскільки масив вибраних для підрахунку хеш-сум файлів зберігає
+                    //об'єкти саме цього класу. Конструктор класу приймає об'єкт класу File в якості аргументу
                     FileEx extendedFile = new FileEx(x);
+                    //Якщо об'єкт File є директорією - пропускаємо поточну ітерацію
                     if(x.isDirectory()) continue;
+                    //Якщо файл існує і ще не був доданий до масиву вибраних для підрахунку хеш-сум файлів,
+                    //то додаємо файл до цього масиву.
                     if(x != null && !containsFile(selectedFilesL, extendedFile)){
                         selectedFilesL.add(extendedFile);
+                        //Збільшуємо кількість вибраних файлів на одиницю
                         items++;
                     }
                 }
+                //Оновлюємо лейбл, що відображає на екрані кількість вибраних файлів
                 numberOfItems.setText(itemsStr + items);
             }
         });
+        //Встановлення опрацьовувача подій на кнопку, що закриває поточне вікно та відкриває вікно з результатом роботи
         ok.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
