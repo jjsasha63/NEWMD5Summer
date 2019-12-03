@@ -94,18 +94,20 @@ public class FileSelector {
         bp.setTop(labelsFlowPane);
 
         //Створюємо об'єкт класу ListView, що приймає в якості аргументу масив даних. Таким чином, вміст списку - це
-        //вміст переданого масиву
+        //вміст переданого масиву. В даному випадку - файли\директорії поточного каталогу
         filesInDir = new ListView<>(filesInDirL);
         //Встановлення максимального розміру списку: висота - 250 пікселів, ширина - 200 пікселів
         filesInDir.setMaxHeight(250);
         filesInDir.setMaxWidth(200);
-        //Встановлення режиму вибору - множинний тип вибору, тобто можна вибрати більше однієї позиції
+        //Встановлення режиму вибору - множинний тип вибору, тобто можна вибрати більше однієї позиції. Для досягнення
+        //цієї цілі слід отримати модель вибору методом getSelectionModel() і встановити один з режимів вибору (описані
+        //в перерахуванні SelectionMode)
         filesInDir.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         //Стандартний вигляд елементу списку, що відображає просто рядок не підходить під цілі нашої програми.
         //Метод setCellFactory дозволяє змінити зовнішній вигляд комірки списку. В якості аргументу приймає об'єкт
         //класу, що наслідується від ListCell, тобто будь-яку реалізацію комірки. Інтерфейс Callback потрібний для
         //заміни стандартної комірки. Метод call() буде викликатися при кожньому зверненні до аргументу, що передається
-        //в цей метод. call() повертає в аргумент методу setCellFactory нашу реалізацію комірки, що прописано в класі
+        //в цей метод. call() повертає в аргумент методу setCellFactory нашу реалізацію комірки, яка прописана в класі
         //FileCell
         filesInDir.setCellFactory(new Callback<ListView<FileEx>, ListCell<FileEx>>() {
             @Override
@@ -135,59 +137,96 @@ public class FileSelector {
                 //Якщо вибраний об'єкт - директорія, то присвоюємо зміній nextDir вибраний каталог
                 nextDir = filesInDir.getSelectionModel().getSelectedItem().getFile();
                 //Виклик методу, що змінює вміст списку файлів каталогу. Видаляє поточний вміст та додає до списку
-                //файли\директорії
+                //файли\директорії вибраного користувачем
                 setFilesObList();
+                //оновлюємо списки для коректного відображення змісту
                 filesInDir.refresh();
                 selectedFiles.refresh();
             }
         });
+        //Створюємо об'єкт класу ListView, що приймає в якості аргументу масив даних. Таким чином, вміст списку - це
+        //вміст переданого масиву. В даному випадку - масив вибраних для підрахунку хеш-сум файлів
         selectedFiles = new ListView<>(selectedFilesL);
+        //Встановлення максимального розміру списку: висота - 250 пікселів, ширина - 200 пікселів
         selectedFiles.setMaxHeight(250);
         selectedFiles.setMaxWidth(200);
+        //Встановлення режиму вибору - множинний тип вибору, тобто можна вибрати більше однієї позиції. Для досягнення
+        //цієї цілі слід отримати модель вибору методом getSelectionModel() і встановити один з режимів вибору (описані
+        //в перерахуванні SelectionMode)
         selectedFiles.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        //Встановлення реалізації зовнішнього виду комірки, що прописана у класі FileCell
         selectedFiles.setCellFactory(new Callback<ListView<FileEx>, ListCell<FileEx>>() {
             @Override
             public ListCell<FileEx> call(ListView<FileEx> param) {
                 return new FileCell();
             }
         });
+        //Додаємо до контейнера обидва списки
         listsFlowPane.getChildren().addAll(filesInDir, selectedFiles);
+        //Встановлення відступу контейнера від лівого боку вікна в 90 пікселів
         listsFlowPane.setPadding(new Insets(0, 0, 0, 90));
+        //Встановлення відступу між елементами контейнеру, що дорівнює 10 пікселів
         listsFlowPane.setHgap(10);
+        //Прикріплюємо групу списків до центру вікна
         bp.setCenter(listsFlowPane);
 
-        //adding buttons
+        //Встановлення мінімальної ширини кнопки в 150 пікселів
         selectAll.setMinWidth(150);
+        //Встановлення кольору заднього фону, що дорівнює #585858, та кольору тексту #b9adb9
         selectAll.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
+        //Встановлення мінімальної ширини кнопки в 150 пікселів
         clearList.setMinWidth(150);
+        //Встановлення кольору заднього фону, що дорівнює #585858, та кольору тексту #b9adb9
         clearList.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
+        //Встановлення мінімальної ширини кнопки в 150 пікселів
         add.setMinWidth(150);
+        //Встановлення кольору заднього фону, що дорівнює #585858, та кольору тексту #b9adb9
         add.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
+        //Встановлення мінімальної ширини кнопки в 150 пікселів
         addRec.setMinWidth(150);
+        //Встановлення кольору заднього фону, що дорівнює #585858, та кольору тексту #b9adb9
         addRec.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
+        //Встановлення мінімальної ширини кнопки в 100 пікселів
         ok.setMinWidth(100);
+        //Встановлення кольору заднього фону, що дорівнює #585858, та кольору тексту #b9adb9
         ok.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
+        //Встановлення мінімальної ширини кнопки в 100 пікселів
         cancel.setMinWidth(100);
+        //Встановлення кольору заднього фону, що дорівнює #585858, та кольору тексту #b9adb9
         cancel.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
+        //Встановлення опрацьовувача подій на кнопку, що дозволяє вибрати всі файли каталогу
         selectAll.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                //Для того, щоб вибрати всі елементи зі списку, треба отримати модель вибору методом getSelectionModel(),
+                //після чого викликати метод selectAll()
                 filesInDir.getSelectionModel().selectAll();
             }
         });
+        //Встановлення опрацьовувача подій на кнопку, що очищає список вибраних файлів
         clearList.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                //Очищаємо масив, вміст якого відображається у списку. Для цього викликаємо метод remove(), що
+                //приймає в якості аргументів індекс-початок та індекс-кінець проміжку, що потрібно видалити
                 selectedFilesL.remove(0, selectedFilesL.size());
+                //Змінній, що зберігає кількість вибраних файлів, присвоюємо значення розміру очищеного масиву, тобто 0
                 items = selectedFilesL.size();
+                //Оновлюємо лейбл, що відображає на екрані кількість вибраних файлів
                 numberOfItems.setText(itemsStr + items);
+                //оновлюємо списки для коректного відображення змісту
                 selectedFiles.refresh();
                 filesInDir.refresh();
             }
         });
+        //Встановлення опрацьовувача подій на кнопку, що додає до масиву обраних файлів, нові файли
         add.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                //При множинному режимі вибору, для отримання всіх вибраних елементів слід викликати метод
+                //getSelectedItems() моделі вибору (для отримання якої викликається getSelectionModel()).
+                //getSelectedItems() повертає масив ObservableList виділених елементів. В даній ситуації
+                //створюється буфер, що містить виділені елементи списку.
                 ObservableList<FileEx> buffer = filesInDir.getSelectionModel().getSelectedItems();
                 for(FileEx x : buffer) {
                     if (x != null && !containsFile(selectedFilesL, x)
