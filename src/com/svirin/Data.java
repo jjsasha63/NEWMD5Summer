@@ -79,12 +79,12 @@ public class Data {
         */
         for (String a : finalstr) {
             if(Main.algorithm)
-                finalstr.set(i, Main.md5(rootfile + "\\" + a.substring(1)) + " " + finalstr.get(i));//string like "<hash> *filename"
+                finalstr.set(i, Main.md5(rootfile + "\\" + a.substring(1)) + " " + finalstr.get(i));
             else
-                finalstr.set(i, Main.createSha1((rootfile + "\\" + a.substring(1))) + " " + finalstr.get(i));//string like "<hash> *filename"
+                finalstr.set(i, Main.createSha1((rootfile + "\\" + a.substring(1))) + " " + finalstr.get(i));
             i++;
         }
-    //    String[] md5hashes = lines.toArray(new String[lines.size()])
+
         int z = 0;
         /*перевірка на рівність*/
         for( i=3;i<lines.size();i++){
