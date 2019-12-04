@@ -253,7 +253,7 @@ public class Main extends Application {
     public void start(Stage primaryStage){
         //Група компонентів, за допомогою яких користувач керує додатком. За правилом театру - група акторів постановки
         Group g = new Group();
-        //Прямокутник розміром 310, 310 с кольором заливки #424242, що є фоном всього додатку
+        //Прямокутник розміром 310, 310 с кольором заливки #424242, що є фоном всього вікна
         Rectangle background = new Rectangle(310, 310, Color.web("#424242"));
         //Додаємо фон до групи
         g.getChildren().add(background);
