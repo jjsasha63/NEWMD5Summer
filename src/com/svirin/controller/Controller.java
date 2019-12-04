@@ -61,29 +61,38 @@ public class Controller{
     //Прогрес-бар, що заповнюється по мірі виконання підрахунків
     private ProgressBar ProcessingBar;
     @FXML
-    //Текстове поле
+    //Текстове поле, що виводить назву файла, що оброблюється
     private TextField NameLine;
     @FXML
+    //Текстове поле, що виводить шлях до файлу, що оброблюється
     private TextField PathLine;
     @FXML
+    //Текстове поле, що виводить розмір у байтах файлу, що оброблюється
     private TextField SizeLine;
-
+    //Метод, що викликається автоматично при завантаженні файлу розмітки
     @FXML
     private void initialize(){
+        //Метод, що ініціалізує масив з інформацією про файли
         initData();
+        //Заборона редактування таблиці користувачу
         NameLine.setEditable(false);
         PathLine.setEditable(false);
         SizeLine.setEditable(false);
+        //Встановлення значень, що будуть виводитися у таблиці. Для цього вказуємо назву
+        //класу, назву та тип поля, що виводиметься
         stateColumn.setCellValueFactory(new PropertyValueFactory<FilePOJO, Circle>("state"));
         idColumn.setCellValueFactory(new PropertyValueFactory<FilePOJO, String>("name"));
         hashColumn.setCellValueFactory(new PropertyValueFactory<FilePOJO, String>("hash"));
-
+        //Вказуємо таблиці масив, вміст якого вона виводить
         tableFiles.setItems(files);
+        //Виклик методу, що контролює вікно
         controllingWindow();
     }
-
+    //Метод, що ініціалізує масив файлів
     private void initData(){
+        //Якщо вікно виводить результат підрахунку хеш-сум
         if(!key) {
+            //
             for (FileEx x : FileSelector.selectedFilesL)
                 files.add(new FilePOJO(x.getName()));
         }
