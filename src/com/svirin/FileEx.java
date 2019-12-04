@@ -31,13 +31,10 @@ public class FileEx{
         ImageIcon imageIcon = (ImageIcon) iconSwing;
         java.awt.Image awtImage = imageIcon.getImage();
         BufferedImage bi;
-        if(awtImage instanceof BufferedImage) bi = (BufferedImage) awtImage;
-        else{
-            bi = new BufferedImage(awtImage.getWidth(null), awtImage.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-            Graphics2D graphics = bi.createGraphics();
-            graphics.drawImage(awtImage, 0, 0, null);
-            graphics.dispose();
-        }
+        bi = new BufferedImage(awtImage.getWidth(null), awtImage.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = bi.createGraphics();
+        graphics.drawImage(awtImage, 0, 0, null);
+        graphics.dispose();
         javafx.scene.image.Image fxImage = SwingFXUtils.toFXImage(bi, null);
         icon = new ImageView(fxImage);
     }
