@@ -1,5 +1,5 @@
-package com.svirin.controller;
-
+package com.svirin.controller;//Назва пакету, до якого належить клас
+//Підключення потрібних пакетів (бібліотек)
 import com.sun.deploy.security.SelectableSecurityManager;
 import com.svirin.*;
 import com.svirin.POJO.FilePOJO;
@@ -22,26 +22,46 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-
+//Клас, що контролює роботу вікна з результатами роботи програми. Інші вікна "будувалися" 
+//ручним кодуванням, без використання графічних редакторів інтерфейсу. Це ж вікно
+//будувалось в додатку Scene Builder, результатом роботи якого є файл розмітки з 
+//розширенням .fxml. Однак, це лише розмітка вікна, логіку його роботи слід прописувати
+//в класі, що називається контролером. Для прив'язки контролера до розмітки, треба зазначити
+//назву класу-контролера у файлі розмітки.
 public class Controller{
-    //false - fileselector, true - data
+    //Ключ, що вказує на клас, який користуватиметься вікном. Так як вікно результату буде
+    //одним, незалежно від вибору функції (підрахувати хеш-суму або перевірити хеш). Якщо
+    //значення ключа true, то вікно використовується для виводу результату підрахунку хеша.
+    //Якщо false, то вікно виводить результат перевірки хеш-суми.
     public static boolean key = false;
+    //Масив файлів, хеш-суми яких підраховані\перевірені. Клас FilePOJO зберігає файл,
+    //стан роботи, хеш-суму.
     private ObservableList<FilePOJO> files = FXCollections.observableArrayList();
+    //Анотація, що дозволяє файлу розмітки мати доступ до private членів контролера
     @FXML
+    //Таблиця, що виводить стан роботи, назву файлу та хеш-суму
     private TableView<FilePOJO> tableFiles;
     @FXML
+    //Колонка таблиці, виводить стани роботи. Працює з об'єктами класу FilePOJO, виводить
+    //на екран об'єкт Circle - коло
     private TableColumn<FilePOJO, Circle> stateColumn;
     @FXML
+    //Колонка таблиці, виводить ім'я файлів. 
     private TableColumn<FilePOJO, String> idColumn;
     @FXML
+    //Колонка таблиці, виводить хеш-суму
     private TableColumn<FilePOJO, String> hashColumn;
     @FXML
+    //Кнопка, що дозволяє зберегти результат роботи у файл
     private Button SaveButton;
     @FXML
+    //Кнопка, що закриває поточне вікно та відкриває початкове вікно
     private Button CancelButton;
     @FXML
+    //Прогрес-бар, що заповнюється по мірі виконання підрахунків
     private ProgressBar ProcessingBar;
     @FXML
+    //Текстове поле
     private TextField NameLine;
     @FXML
     private TextField PathLine;
