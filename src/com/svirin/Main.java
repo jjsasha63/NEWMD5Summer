@@ -187,28 +187,44 @@ public class Main extends Application {
                 Controller.key = false;
             }
         });
-
+        /**
+         * реалізація кнопки порівняння хешів
+         * виклик вікна вибору файлів та вікна порівняння
+         * отримання данних про шлях до файлу типу .md5
+         * виклик функцій приведення хешів вибраних файлів до форми потрібної для порівняння
+         * та реалізація виклик функції порівняння хешів
+         */
         verify.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                /*перевірка методу хешування*/
                 if(sumTypeC.getSelectionModel().getSelectedItem() == "MD5")
                     algorithm = true;
                 else
                     algorithm = false;
-                dir = new File(directoryT.getText());
+                dir = new File(directoryT.getText()); //зберігання шляху до вибраного файлу
+                /*Встановлення фільтрів на вибір файлу виключно .md5*/
                 fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("MD5 files (*.md5)", "*.md5"));
-                File dir1 = fc.showOpenDialog(primaryStage);
-                if(dir1 == null) return;
+                File dir1 = fc.showOpenDialog(primaryStage); //виклик вікна вибору файлу
+                if(dir1 == null) return; //якщо файл не існує
+                /*отримання шляху до файлу */
                 anotherDirectory.setText(dir1.getAbsolutePath());
                 String md5directory = anotherDirectory.getText();
+                /*
+                * виклик конструктора класу Data
+                * передання шляху до файлу типу .md5
+                * передання шляху до вибраноъ папки
+                * передання змінної типу file вибраного файлу
+                 */
                 Data data = new Data(dir, md5directory, dir.getAbsolutePath());
                 try {
-                    data.transform();
+                    data.transform();  // виклик методу порівняння хешів
                     //data.md5file();
                 } catch (IOException | NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 }
                 try {
+                    /*вивід вікна порівняння*/
                     ProcessingWin outWin = new ProcessingWin();
                     processing = outWin.getProcessStage();
                     processing.show();
