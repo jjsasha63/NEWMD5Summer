@@ -92,7 +92,7 @@ public class Controller{
     private void initData(){
         //Якщо вікно виводить результат підрахунку хеш-сум
         if(!key) {
-            //
+            //Ініціалізуємо наш масив значеннями з масиву вибраних користувачем файлів
             for (FileEx x : FileSelector.selectedFilesL)
                 files.add(new FilePOJO(x.getName()));
         }
