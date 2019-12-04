@@ -57,8 +57,6 @@ public class FileSelector {
     private Label folders = new Label("Folders:");
     //Лейбл, що виводить на екран напис "Number of items: n", де n - кількість обраних для підрахунку хеш-сум файлів
     private Label numberOfItems = new Label(itemsStr + items);
-    //Контейнер, що працює за принципом таблиці
-    private GridPane gp = new GridPane();
     //Контейнер, що дозволяє прив'язати елементи до сторін вікна додатку
     private BorderPane bp = new BorderPane();
     //Контейнер, що працює за принципом таблиці. Зберігає всі кнопки вікна
@@ -285,50 +283,85 @@ public class FileSelector {
         ok.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                //Створюємо блок try-catch, що слугує для "перехвату" виключних ситуацій, які неможливо передбачити
+                //на етапі компіляції (наприклад, файл не знайдено). У блоці try записується код, що може видати
+                //виключну ситуацію, у блок catch передається та оброблюється виключення. Клас ProcessingWin може
+                //видати виключення Exception, якщо не було знайдено файл розмітки вікна (див. коментарі класу
+                //ProcessingWin)
                 try {
+                    //Створюємо об'єкт класу ProcessingWin, який повертає вікно з результатами роботи програми
                     ProcessingWin outWin = new ProcessingWin();
+                    //Передаємо в клас Main вікно з результатами роботи програми, яке отримали методом getProcessStage()
                     Main.processing = outWin.getProcessStage();
+                    //Закриваємо вікно вибору файлів для підрахунку хеш-сум
                     Main.fileSelection.close();
+                    //Відкриваємо вікно з результатами роботи програми
                     Main.processing.show();
-                } catch (Exception e) {
+                } catch (Exception e) {//Перехоплюємо можливе виключення
+                    //При виключній ситуації виводимо трасування стеку. Простими словами, це список методів, що були
+                    //викликані до моменту, коли в додатку з'явилось виключення. Це допомагає віднайти клас, метод якого
+                    //видав виключну ситуацію.
                     e.printStackTrace();
                 }
             }
         });
+        //Встановлення опрацьовувача подій на кнопку, що повертає користувача на крок назад - до вибору кореневої
+        //папки, хеш-суми файлів з якої треба підрахувати
         cancel.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                //З масиву, що зберігає вибрані для підрахунку хешу файли, видаляємо всі елементи
                 selectedFilesL.remove(0, selectedFilesL.size());
+                //Закриваємо вікно вибору файлів
                 selectorStage.close();
+                //Відображаємо вікно вибору кореневої папки
                 Main.mainWindow.show();
             }
         });
+        //Додаємо до "табличного" контейнеру кнопки. Для цього викликається метод add(), в який
+        //передається елемент, що потрібно додати, номер стовпчика та номер рядка
         buttonsGridPane.add(selectAll, 0, 0);
         buttonsGridPane.add(clearList, 0, 1);
         buttonsGridPane.add(add, 1, 0);
         buttonsGridPane.add(addRec, 1, 1);
         buttonsGridPane.add(ok, 2, 1);
         buttonsGridPane.add(cancel, 3, 1);
-        buttonsGridPane.setHgap(10);
-        buttonsGridPane.setVgap(10);
+        buttonsGridPane.setHgap(10); //Встановлення відступу між стовпчиками - 10 пікселів
+        buttonsGridPane.setVgap(10); //Встановлення відступу між рядками - 5 пікселів
+        //Відступи для контейнера відносно сторін контейнеру. Від лівого краю - 10 пікселів, від верхнього - 10 пікселів
         buttonsGridPane.setPadding(new Insets(10, 0, 0, 10));
-        gp.add(buttonsGridPane, 0, 0);
-        bp.setBottom(gp);
-
+        //Прив'язуємо групу кнопок до нижнього краю вікна
+        bp.setBottom(buttonsGridPane);
+        //Прямокутник розміром 620, 420 с кольором заливки #424242, що є фоном всього вікна
         Rectangle background = new Rectangle(620, 420, Color.web("#424242"));
+        //Група компонентів, за допомогою яких користувач керує додатком. За правилом театру - група акторів постановки
         Group g = new Group();
+        //Додаємо фон до групи
         g.getChildren().add(background);
+        //Додаємо компоненти до групи
         g.getChildren().add(bp);
+        //Створюємо об'єкт класу Scene, конструктор якого приймає контейнер з елементами та розмір вікна. За правилом
+        //театру - це постанова, до якої ми додаємо групу акторів (контейнер з елементами інтерфейсу)
         Scene scene = new Scene(g, 600, 400);
+        //Додаємо на сцену постанову
         selectorStage.setScene(scene);
+        //Додаємо заголовок вікна
         selectorStage.setTitle("Create list of files to sum");
+        //Метод, що дозволяє зробити вікно незмінним за розміром. Для цього слід передати false в якості аргумента
         selectorStage.setResizable(false);
     }
-
+    //Метод, що оновлює вміст масиву файлів каталогу при переході користувача до іншої папки. Аргументів не приймає.
     private void setFilesObList(){
+        //Видаляємо всі елементи масиву
         filesInDirL.remove(0, filesInDirL.size());
+        //Якщо папка, в яку переходить користувач, не є кореневою... Для перевірки цього викликається метод
+        //getAbsolutePath(), що повертає рядок - повний шлях до директорії. Для порівняння рядків використовується метод
+        //equals().
         if(!nextDir.getAbsolutePath().equals(rootDirectory.getAbsolutePath()))
+            //Додаємо до масиву файлів директорії першим елементом папку з назвою "..". При подвійному кліку на цю папку
+            //користувач повернеться до минулої папки
             filesInDirL.add(new FileEx(getPrevDir(nextDir), ".."));
+        //За допомогою циклу for-each додаємо до масиву всі файли\директорії, що містить нова папка
         for(File x : nextDir.listFiles())
             filesInDirL.add(new FileEx(x));
     }
