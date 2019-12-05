@@ -104,21 +104,22 @@ public class Controller{
     //Метод, що встановлює опрацьовувачі подій на кнопки та викликає потрібні методи, залежно від вибраного
     //користувачем функціоналу
     private void controllingWindow(){
-        //Встановлення опрацьовувача подій на кнопку, за допомогою якої можна зберегти результати у файл
-        SaveButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                //Оскільки виключна ситуація IOException в методі writingHash() не опрацьовується, то поміщаємо
-                //виклик цього методу в блок try-catch.
-                try {
-                    //Виклик методу, що записує результат роботи у текстовий файл
-                    writingHash();
-                } catch (IOException e) {
-                    //Виводимо трасування стеку
-                    e.printStackTrace();
+        if(!key)
+            //Встановлення опрацьовувача подій на кнопку, за допомогою якої можна зберегти результати у файл
+            SaveButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    //Оскільки виключна ситуація IOException в методі writingHash() не опрацьовується, то поміщаємо
+                    //виклик цього методу в блок try-catch.
+                    try {
+                        //Виклик методу, що записує результат роботи у текстовий файл
+                        writingHash();
+                    } catch (IOException e) {
+                        //Виводимо трасування стеку
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
         //Встановлення опрацьовувача подій на кнопку, що закриває поточне вікно та відкриває початкове
         CancelButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -148,6 +149,9 @@ public class Controller{
                     files.get(i).setState(States.ERROR.getState());
                 files.get(i).setHash(Data.hashes.get(i));
             }
+            NameLine.setText("-");
+            PathLine.setText("-");
+            SizeLine.setText("-");
         }
     }
     //Метод, що рахує хеш-суми файлів
