@@ -159,6 +159,17 @@ public class FileSelector {
                 return new FileCell();
             }
         });
+        //Встановлюємо опрацьовувач події на список обраних файлів. При подвійному кліку - елемент видаляється
+        selectedFiles.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(event.getClickCount() != 2) return;
+                selectedFilesL.remove(selectedFiles.getSelectionModel().getSelectedItem());
+                items--;
+                //Оновлюємо лейбл, що відображає на екрані кількість вибраних файлів
+                numberOfItems.setText(itemsStr + items);
+            }
+        });
         //Додаємо до контейнера обидва списки
         listsFlowPane.getChildren().addAll(filesInDir, selectedFiles);
         //Встановлення відступу контейнера від лівого боку вікна в 90 пікселів
