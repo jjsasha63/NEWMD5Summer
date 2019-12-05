@@ -86,26 +86,31 @@ public class Data {
         }
 
         int z = 0;
+        boolean isEquals = true;
         /*перевірка на рівність*/
         for( i=3;i<lines.size();i++){
+            String bufName;
+            if(Main.algorithm) bufName = lines.get(i).substring(33);
+            else bufName = lines.get(i).substring(41);
             for(int k=0;k<finalstr.size();k++){
                 if(lines.get(i).toUpperCase().equals(finalstr.get(k).toUpperCase())){
                     state.add(true); //збереження стану результату
                     /*отримання імен перевірених файлів*/
-                    if(Main.algorithm)
-                        names.add(lines.get(i).substring(33));
-                    else
-                        names.add(lines.get(i).substring(41));
+                    names.add(bufName);
                     hashes.add(finalstr.get(k).replace(names.get(z),"")); //отримання перевіреного хешу
                     System.out.println(hashes.get(z));
                     z++;
+                    isEquals = true;
+                    break;
                 }
+                isEquals = false;
             }
             /*при негативному результаті перевірки*/
-            if(!names.contains(lines.get(i).substring(33))){
+            if(!names.contains(bufName) && !isEquals){
                 state.add(false); //запис стану результату
-                names.add(lines.get(i).substring(33)); //ім'я файлу для виведення
+                names.add(bufName); //ім'я файлу для виведення
                 hashes.add("Checksum did not match."); // повідомлення про негативний результат
+                z++;
             }
         }
     }
