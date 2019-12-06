@@ -65,8 +65,8 @@
       <TableView fx:id="tableFiles" prefHeight="318.0" prefWidth="700.0" style="-fx-background-color: #585858;">
         <columns>
           <TableColumn fx:id="stateColumn" prefWidth="48.799986243247986" style="-fx-background-color: #585858;" styleClass="-fx-background-color" text="State" />
-          <TableColumn fx:id="idColumn" prefWidth="240.79999387264252" style="-fx-text-fill: #ac62ac; -fx-background-color: #585858;" text="File" />
-            <TableColumn fx:id="hashColumn" prefWidth="410.3999938964844" style="-fx-background-color: #585858; -fx-text-fill: #ac62ac;" text="Hash" />
+          <TableColumn fx:id="idColumn" prefWidth="240.79999387264252" style="-fx-text-fill: #b9adb9; -fx-background-color: #585858;" text="File" />
+            <TableColumn fx:id="hashColumn" prefWidth="410.3999938964844" style="-fx-background-color: #585858; -fx-text-fill: #b9adb9;" text="Hash" />
         </columns>
       </TableView>
    </children> 
