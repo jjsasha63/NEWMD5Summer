@@ -8,7 +8,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -116,7 +115,7 @@ public class Data {
                 isEquals = false;
             }
             /*при негативному результаті перевірки*/
-            if(!names.contains(bufName) && !isEquals && hashes.get(z).equals("Ok")){
+            if(!names.contains(bufName) && !isEquals && hashes.get(z).equals("OK")){
                 state.add(false); //запис стану результату
                 names.add(bufName); //ім'я файлу для виведення
                 hashes.set(z, "Checksum did not match."); // повідомлення про негативний результат
