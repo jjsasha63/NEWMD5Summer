@@ -104,22 +104,24 @@ public class Controller{
     //Метод, що встановлює опрацьовувачі подій на кнопки та викликає потрібні методи, залежно від вибраного
     //користувачем функціоналу
     private void controllingWindow(){
-        if(!key)
-            //Встановлення опрацьовувача подій на кнопку, за допомогою якої можна зберегти результати у файл
-            SaveButton.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    //Оскільки виключна ситуація IOException в методі writingHash() не опрацьовується, то поміщаємо
-                    //виклик цього методу в блок try-catch.
-                    try {
-                        //Виклик методу, що записує результат роботи у текстовий файл
+        //Встановлення опрацьовувача подій на кнопку, за допомогою якої можна зберегти результати у файл
+        SaveButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                //Оскільки виключна ситуація IOException в методі writingHash() не опрацьовується, то поміщаємо
+                //виклик цього методу в блок try-catch.
+                try {
+                    //Виклик методу, що записує результат роботи у текстовий файл
+                    if(!key)
                         writingHash();
-                    } catch (IOException e) {
-                        //Виводимо трасування стеку
-                        e.printStackTrace();
-                    }
+                    else
+                        writeVerifyResults();
+                } catch (IOException e) {
+                    //Виводимо трасування стеку
+                    e.printStackTrace();
                 }
-            });
+            }
+        });
         //Встановлення опрацьовувача подій на кнопку, що закриває поточне вікно та відкриває початкове
         CancelButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -218,6 +220,26 @@ public class Controller{
                     name + "\n");
         }
         //Закриваємо файл, в який записувався результат роботи
+        writer.close();
+    }
+    //Метод для запису результату перевірки хеш-сум
+    void writeVerifyResults() throws IOException{
+        //Створюємо об'єкт FileChooser, що є вікном вибору файлів
+        FileChooser fc = new FileChooser();
+        //Встановлюємо фільтр розширень, аби користувач міг вибрати або створити новий файл ЛИШЕ з розширенням .md5
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text files (*.txt)", "*.txt"));
+        //Показуємо вікно збереження файлу
+        File file = fc.showSaveDialog(Main.processing);
+        //Якщо файл, в який зберігатиметься результат, не існує або до нього немає доступу - кінець роботи методу
+        if(file == null) return;
+        //Створюємо об'єкт класу FileWriter, який дозволяє записати інформацію у файл. В конструктор передаємо файл, в
+        //який ведеться запис
+        FileWriter writer = new FileWriter(file);
+        for(int i = 0; i < files.size(); ++i)
+            if(Data.state.get(i))
+                writer.write(files.get(i).getName() + " OK\n");
+            else
+                writer.write(files.get(i).getName() + " ERROR: " + files.get(i).getHash() + "\n");
         writer.close();
     }
 }
