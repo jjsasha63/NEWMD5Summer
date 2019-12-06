@@ -131,6 +131,7 @@ public class Controller{
                 Data.names.clear();
                 Data.state.clear();
                 Data.hashes.clear();
+                FileSelector.selectedFilesL.clear();
                 tableFiles.refresh();
                 //Закриваємо поточне вікно
                 Main.processing.close();
