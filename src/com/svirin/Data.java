@@ -27,6 +27,7 @@ public class Data {
     public static List<String> names = new ArrayList<>();
     /**список для зберігання хешів перевіряємих файлів*/
     public static List<String> hashes = new ArrayList<>();
+    public static List<String> cause = new ArrayList<>();
     /**рядкова змінна призначена для зберігання кореневої папки перевірки*/
     String rootfile = new String();
     /**рядкова змінна що зберігає шлях до вибраного файлу типу .md5*/
@@ -66,7 +67,8 @@ public class Data {
             lines.add(line);
         }
         /*запис хешу в порівнювані рядки*/
-        for(int i = 3; i < lines.size(); ++i) {
+        for(int i = 0; i < lines.size(); ++i) {
+            if(lines.get(i).isEmpty() || lines.get(i).charAt(0) == '#') continue;
             if(Main.algorithm)
                 finalstr.add(lines.get(i).substring(33));
             else
@@ -78,17 +80,25 @@ public class Data {
         * додавання шляху в рядок
         */
         for (String a : finalstr) {
-            if(Main.algorithm)
-                finalstr.set(i, Main.md5(rootfile + "\\" + a.substring(1)) + " " + finalstr.get(i));
-            else
-                finalstr.set(i, Main.createSha1((rootfile + "\\" + a.substring(1))) + " " + finalstr.get(i));
-            i++;
+            try{
+                if(Main.algorithm)
+                    finalstr.set(i, Main.md5(rootfile + "\\" + a.substring(1)) + " " + finalstr.get(i));
+                else
+                    finalstr.set(i, Main.createSha1((rootfile + "\\" + a.substring(1))) + " " + finalstr.get(i));
+                i++;
+                hashes.add("OK");
+            }
+            catch(IOException e){
+                finalstr.set(i, "00000000000000000000000000000000 " + finalstr.get(i));
+                hashes.add("File does not exist.");
+            }
         }
 
         int z = 0;
         boolean isEquals = true;
         /*перевірка на рівність*/
-        for( i=3;i<lines.size();i++){
+        for( i = 0;i<lines.size();i++){
+            if(lines.get(i).isEmpty() || lines.get(i).charAt(0) == '#') continue;
             String bufName;
             if(Main.algorithm) bufName = lines.get(i).substring(33);
             else bufName = lines.get(i).substring(41);
@@ -97,7 +107,7 @@ public class Data {
                     state.add(true); //збереження стану результату
                     /*отримання імен перевірених файлів*/
                     names.add(bufName);
-                    hashes.add(finalstr.get(k).replace(names.get(z),"")); //отримання перевіреного хешу
+                    hashes.set(z, finalstr.get(k).replace(names.get(z),"")); //отримання перевіреного хешу
                     System.out.println(hashes.get(z));
                     z++;
                     isEquals = true;
@@ -106,10 +116,16 @@ public class Data {
                 isEquals = false;
             }
             /*при негативному результаті перевірки*/
-            if(!names.contains(bufName) && !isEquals){
+            if(!names.contains(bufName) && !isEquals && hashes.get(z).equals("Ok")){
                 state.add(false); //запис стану результату
                 names.add(bufName); //ім'я файлу для виведення
-                hashes.add("Checksum did not match."); // повідомлення про негативний результат
+                hashes.set(z, "Checksum did not match."); // повідомлення про негативний результат
+                z++;
+            }
+            else if(!names.contains(bufName) && !isEquals && hashes.get(z).equals("File does not exist.")){
+                state.add(false); //запис стану результату
+                names.add(bufName); //ім'я файлу для виведення
+                hashes.set(z, "File does not exist."); // повідомлення про негативний результат
                 z++;
             }
         }
