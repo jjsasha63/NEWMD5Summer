@@ -17,7 +17,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-//Клас, що контролює роботу вікна з результатами роботи програми. Інші вікна "будувалися" 
+import java.util.regex.Matcher;
+
+//Клас, що контролює роботу вікна з результатами роботи програми. Інші вікна "будувалися"
 //ручним кодуванням, без використання графічних редакторів інтерфейсу. Це ж вікно
 //будувалось в додатку Scene Builder, результатом роботи якого є файл розмітки з 
 //розширенням .fxml. Однак, це лише розмітка вікна, логіку його роботи слід прописувати
@@ -67,6 +69,12 @@ public class Controller{
     //Метод, що викликається автоматично при завантаженні файлу розмітки
     @FXML
     private void initialize(){
+        Main m = new Main();
+        /*блок зміни кольору отриманого з головного вікна*/
+        String textcolor = "#" + Integer.toHexString(m.colorPicker.getValue().hashCode()).substring(0, 6).toUpperCase();
+        String finalColor = "-fx-text-fill: " + textcolor + "; -fx-background-color: #585858;";
+        hashColumn.setStyle(finalColor);
+        idColumn.setStyle(finalColor);
         //Метод, що ініціалізує масив з інформацією про файли
         initData();
         //Заборона редактування таблиці користувачу
