@@ -227,7 +227,7 @@ public class Controller{
     void writeVerifyResults() throws IOException{
         //Створюємо об'єкт FileChooser, що є вікном вибору файлів
         FileChooser fc = new FileChooser();
-        //Встановлюємо фільтр розширень, аби користувач міг вибрати або створити новий файл ЛИШЕ з розширенням .md5
+        //Встановлюємо фільтр розширень, аби користувач міг вибрати або створити новий файл ЛИШЕ з розширенням .txt
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text files (*.txt)", "*.txt"));
         //Показуємо вікно збереження файлу
         File file = fc.showSaveDialog(Main.processing);
