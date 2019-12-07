@@ -214,7 +214,7 @@ public class Controller{
         //який ведеться запис
         FileWriter writer = new FileWriter(file);
         //Записуємо до файлу рядок, що інформує про дату створення хеш-сум
-        writer.write("#Genereted " + new Date().toString() + "\n\n\n");
+        writer.write("#Genereted " + new Date().toString() + System.lineSeparator());
         //Записуємо у файл інформацію про кожний файл
         for(int i = 0; i < files.size(); ++i) {
             //Створюємо рядок-назву файлу, що містить шлях до файлу відносно кореневої папки. Тобто, отримуємо повний
@@ -226,7 +226,7 @@ public class Controller{
             name = name.substring(1);
             //Записуємо у файл рядок виду "<хеш_сума> *ім'я файлу"
             writer.write(files.get(i).getHash() + " " + "*" +
-                    name + "\n");
+                    name + System.lineSeparator());
         }
         //Закриваємо файл, в який записувався результат роботи
         writer.close();
@@ -246,9 +246,9 @@ public class Controller{
         FileWriter writer = new FileWriter(file);
         for(int i = 0; i < files.size(); ++i)
             if(Data.state.get(i))
-                writer.write(files.get(i).getName() + " OK\n");
+                writer.write(files.get(i).getName() + " OK" + System.lineSeparator());
             else
-                writer.write(files.get(i).getName() + " ERROR: " + files.get(i).getHash() + "\n");
+                writer.write(files.get(i).getName() + " ERROR: " + files.get(i).getHash() + System.lineSeparator());
         writer.close();
     }
 }
