@@ -1,5 +1,6 @@
 package com.svirin.controller;//Назва пакету, до якого належить клас
 //Підключення потрібних пакетів (бібліотек)
+import com.sun.glass.ui.Size;
 import com.svirin.*;
 import com.svirin.POJO.FilePOJO;
 import javafx.collections.FXCollections;
@@ -9,7 +10,9 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Path;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -17,7 +20,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-import java.util.regex.Matcher;
 
 //Клас, що контролює роботу вікна з результатами роботи програми. Інші вікна "будувалися"
 //ручним кодуванням, без використання графічних редакторів інтерфейсу. Це ж вікно
@@ -66,15 +68,48 @@ public class Controller{
     @FXML
     //Текстове поле, що виводить розмір у байтах файлу, що оброблюється
     private TextField SizeLine;
+    @FXML
+    private AnchorPane anchorPane;
     //Метод, що викликається автоматично при завантаженні файлу розмітки
     @FXML
+    private Label nameL;
+    @FXML
+    private Label sizeL;
+    @FXML
+    private Label pathL;
+    @FXML
+    private Label unprocessedL;
+    @FXML
+    private Label okL;
+    @FXML
+    private Label processingL;
+    @FXML
+    private Label errL;
+    @FXML
+    private Label barL;
+    @FXML
+    private Label keyL;
+    @FXML
     private void initialize(){
-        Main m = new Main();
         /*блок зміни кольору отриманого з головного вікна*/
-        String textcolor = "#" + Integer.toHexString(m.colorPicker.getValue().hashCode()).substring(0, 6).toUpperCase();
-        String finalColor = "-fx-text-fill: " + textcolor + "; -fx-background-color: #585858;";
-        hashColumn.setStyle(finalColor);
-        idColumn.setStyle(finalColor);
+        anchorPane.setStyle("-fx-background-color: " + Main.backgroundcol.substring(10, 17));
+        hashColumn.setStyle(Main.tablecol);
+        idColumn.setStyle(Main.tablecol);
+        stateColumn.setStyle(Main.tablecol);
+        NameLine.setStyle("-fx-background-color: " + Main.backgroundcol.substring(10, 17));
+        PathLine.setStyle("-fx-background-color: " + Main.backgroundcol.substring(10, 17));
+        SizeLine.setStyle("-fx-background-color: " + Main.backgroundcol.substring(10, 17));
+        nameL.setStyle(Main.textcolor);
+        sizeL.setStyle(Main.textcolor);
+        pathL.setStyle(Main.textcolor);
+        keyL.setStyle(Main.textcolor);
+        unprocessedL.setStyle(Main.textcolor);
+        okL.setStyle(Main.textcolor);
+        processingL.setStyle(Main.textcolor);
+        errL.setStyle(Main.textcolor);
+        barL.setStyle(Main.textcolor);
+        SaveButton.setStyle(Main.textcolor + "; " + Main.buttoncol);
+        CancelButton.setStyle(Main.textcolor + "; " + Main.buttoncol);
         //Метод, що ініціалізує масив з інформацією про файли
         initData();
         //Заборона редактування таблиці користувачу
