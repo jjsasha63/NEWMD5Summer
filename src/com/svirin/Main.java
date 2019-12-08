@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -19,6 +20,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import javax.swing.text.Style;
 import javax.xml.bind.DatatypeConverter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,7 +44,8 @@ public class Main extends Application {
     public static Stage fileSelection;//Вікно вибору файлів з кореневої директорії, хеш яких потрібно створити
     public static Stage processing;//Вікно з результатом роботи програми - таблиця з назвами файлів, хеш-сумами та станом роботи(успішно\помилка...)
     public static boolean algorithm;//Тип алгоритму хешування (true - MD5, false - SHA-1)
-    File dir;
+    public static ColorPicker colorPicker = new ColorPicker(); // вибір кольору тексту
+    File dir;//змінна прийому шляху до папки
     //Статичний метод, що рахує хеш-суму файлу за алгоритмом md5. В якості аргументу приймає рядок - шлях до файлу. Повертає рядок - хеш-суму
     //файлу. Директива throws означає, що метод НЕ опрацьовує виключення, що можуть статися під час роботи, і при виклику
     //цього методу потрібно опрацювати можливі виключення. NoSuchAlgorithmException - алгоритм хешування не існує, або
@@ -90,6 +93,8 @@ public class Main extends Application {
         VBox folderPane = new VBox();
         //Елемент інтерфейсу Label - відображає напис "Checksum type:"
         Label sumTypeL = new Label("Checksum type:");
+        Label col = new Label("TextTableColor:"); //Елемент інтерфейсу Label - відображає напис "TextTableColor:"
+        col.setStyle("-fx-text-fill: #b9adb9");//зміна кольору
         //Метод, що встановлює стиль елементу інтерфейсу. Приймає CSS код. В даному випадку цей код встановлює
         //колір шрифту рівним #b9adb9
         sumTypeL.setStyle("-fx-text-fill: #b9adb9");
@@ -137,6 +142,7 @@ public class Main extends Application {
         Button selectDirB = new Button("Select Folder");
         //Встановлення кольору заднього фону, що рівний #585858 та кольору тексту, що рівний #b9adb9
         selectDirB.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
+
 
         //Встановлення опрацьовувача подій на кнопку, за допомогою якої вибирається коренева директорія. Для цього слід
         //викликати метод setOnAction, в який передається реалізація інтерфейсу EventHandler.
@@ -246,11 +252,13 @@ public class Main extends Application {
 
         //Додавання елементів до контейнеру, що працює за принципом таблиці. Для цього викликається метод add(), в який
         // передається елемент, що потрібно додати, номер стовпчика та номер рядка
+        grid.add(col, 1, 2);
         grid.add(sumTypeL, 1, 0);
         grid.add(sumTypeC, 2, 0);
         grid.add(createSum, 0, 1);
         grid.add(verify, 1, 1);
         grid.add(about, 2, 1);
+        grid.add(colorPicker,2,2);
         //Встановлення сірої рамки навколо контейнера
         grid.setStyle("-fx-border-color: gray");
         grid.setHgap(5); //Встановлення відступу між стовпчиками - 5 пікселів
