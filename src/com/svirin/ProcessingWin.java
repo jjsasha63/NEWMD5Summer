@@ -3,9 +3,7 @@ package com.svirin;//Ім'я пакету (бібліотеки), до яког�
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import java.io.File;
 //Клас, що загружає файл розмітки вікна та відкриває це вікно
 public class ProcessingWin {
     //Вікно з результатами роботи програми
