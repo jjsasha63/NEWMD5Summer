@@ -213,14 +213,15 @@ public class Main extends Application {
         about.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                textcolor = "-fx-text-fill: " + "#" +
-                        Integer.toHexString(textColor.getValue().hashCode()).substring(0, 6).toUpperCase();
+                System.out.println(textColor.getValue().toString());
+                textcolor = "-fx-text-fill: " + "#"
+                        + Integer.toHexString(textColor.getValue().hashCode()).toUpperCase();
                 backgroundcol = "-fx-fill: " + "#" +
-                        Integer.toHexString(backgroundColor.getValue().hashCode()).substring(0, 6).toUpperCase();
+                        Integer.toHexString(backgroundColor.getValue().hashCode()).toUpperCase();
                 buttoncol = "-fx-background-color: " + "#" +
-                        Integer.toHexString(buttonColor.getValue().hashCode()).substring(0, 6).toUpperCase();
+                        Integer.toHexString(buttonColor.getValue().hashCode()).toUpperCase();
                 tablecol = "-fx-background-color: " + "#" +
-                        Integer.toHexString(tableColor.getValue().hashCode()).substring(0, 6).toUpperCase() +
+                        Integer.toHexString(tableColor.getValue().hashCode()).toUpperCase() +
                         "; " + textcolor;
                 sumTypeL.setStyle(textcolor);
                 backCol.setStyle(textcolor);
