@@ -80,8 +80,8 @@ public class FileSelector {
     //Метод, що будує вікно вибору файлів - додаються елементи інтерфейсу та назначаються обробники подій
     public void buildingWindow(){
         //Встановлення кольору фону лейблів, що дорівнює #b9adb9
-        folders.setStyle("-fx-text-fill: #b9adb9");
-        numberOfItems.setStyle("-fx-text-fill: #b9adb9");
+        folders.setStyle(Main.textcolor);
+        numberOfItems.setStyle(Main.textcolor);
         //Додаємо до контейнеру лейбли методом addAll
         labelsFlowPane.getChildren().addAll(folders, numberOfItems);
         //Встановлення відступу між елементами контейнеру, що дорівнює 200 пікселів
@@ -182,27 +182,27 @@ public class FileSelector {
         //Встановлення мінімальної ширини кнопки в 150 пікселів
         selectAll.setMinWidth(150);
         //Встановлення кольору заднього фону, що дорівнює #585858, та кольору тексту #b9adb9
-        selectAll.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
+        selectAll.setStyle(Main.buttoncol);
         //Встановлення мінімальної ширини кнопки в 150 пікселів
         clearList.setMinWidth(150);
         //Встановлення кольору заднього фону, що дорівнює #585858, та кольору тексту #b9adb9
-        clearList.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
+        clearList.setStyle(Main.buttoncol);
         //Встановлення мінімальної ширини кнопки в 150 пікселів
         add.setMinWidth(150);
         //Встановлення кольору заднього фону, що дорівнює #585858, та кольору тексту #b9adb9
-        add.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
+        add.setStyle(Main.buttoncol);
         //Встановлення мінімальної ширини кнопки в 150 пікселів
         addRec.setMinWidth(150);
         //Встановлення кольору заднього фону, що дорівнює #585858, та кольору тексту #b9adb9
-        addRec.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
+        addRec.setStyle(Main.buttoncol);
         //Встановлення мінімальної ширини кнопки в 100 пікселів
         ok.setMinWidth(100);
         //Встановлення кольору заднього фону, що дорівнює #585858, та кольору тексту #b9adb9
-        ok.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
+        ok.setStyle(Main.buttoncol);
         //Встановлення мінімальної ширини кнопки в 100 пікселів
         cancel.setMinWidth(100);
         //Встановлення кольору заднього фону, що дорівнює #585858, та кольору тексту #b9adb9
-        cancel.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
+        cancel.setStyle(Main.buttoncol);
         //Встановлення опрацьовувача подій на кнопку, що дозволяє вибрати всі файли каталогу
         selectAll.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -344,7 +344,8 @@ public class FileSelector {
         //Прив'язуємо групу кнопок до нижнього краю вікна
         bp.setBottom(buttonsGridPane);
         //Прямокутник розміром 620, 420 с кольором заливки #424242, що є фоном всього вікна
-        Rectangle background = new Rectangle(620, 420, Color.web("#424242"));
+        Rectangle background = new Rectangle(620, 420);
+        background.setStyle(Main.backgroundcol);
         //Група компонентів, за допомогою яких користувач керує додатком. За правилом театру - група акторів постановки
         Group g = new Group();
         //Додаємо фон до групи
