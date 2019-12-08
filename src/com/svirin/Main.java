@@ -5,7 +5,6 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -20,7 +19,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import javax.swing.text.Style;
 import javax.xml.bind.DatatypeConverter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,7 +42,16 @@ public class Main extends Application {
     public static Stage fileSelection;//Вікно вибору файлів з кореневої директорії, хеш яких потрібно створити
     public static Stage processing;//Вікно з результатом роботи програми - таблиця з назвами файлів, хеш-сумами та станом роботи(успішно\помилка...)
     public static boolean algorithm;//Тип алгоритму хешування (true - MD5, false - SHA-1)
-    public static ColorPicker colorPicker = new ColorPicker(); // вибір кольору тексту
+    public static ColorPicker textColor = new ColorPicker(); // вибір кольору тексту
+    public static ColorPicker backgroundColor = new ColorPicker();//колір заднього фону
+    public static ColorPicker buttonColor = new ColorPicker();//колір кнопок
+    public static ColorPicker tableColor = new ColorPicker();//колір заднього фону таблиці
+    public static String textcolor = "-fx-text-fill: #b9adb9";
+    public static String backgroundcol = "-fx-fill: #424242";
+    public static String buttoncol = "-fx-background-color: #585858; -fx-text-fill: #b9adb9";
+    public static String tablecol = "-fx-background-color: #424242; -fx-text-fill: #b9adb9;";
+    //Прямокутник розміром 310, 310 с кольором заливки #424242, що є фоном всього вікна
+    Rectangle background = new Rectangle(350, 410, Color.web("#424242"));
     File dir;//змінна прийому шляху до папки
     //Статичний метод, що рахує хеш-суму файлу за алгоритмом md5. В якості аргументу приймає рядок - шлях до файлу. Повертає рядок - хеш-суму
     //файлу. Директива throws означає, що метод НЕ опрацьовує виключення, що можуть статися під час роботи, і при виклику
@@ -80,6 +87,10 @@ public class Main extends Application {
     //Метод, що "будує" основне вікно - додаються елементи інтерфейсу та назначаються обробники подій. В якості аргументу
     //отримує основне вікно програми. Повертає BorderPane - контейнерний елемент, що містить всі інші елементи інтерфейсу.
     private BorderPane initDirectorySelection(Stage primaryStage){
+        textColor.setMaxWidth(105);
+        backgroundColor.setMaxWidth(105);
+        buttonColor.setMaxWidth(105);
+        tableColor.setMaxWidth(105);
         //Створення контейнеру, до якого додаватимуться всі елементи інтерфейсу вікна. Це контейнер, в якому елементи
         //"притискаються" до однієї зі сторін вікна - верх, низ, центр, ліва сторона вікна, права сторона вікна.
         BorderPane pane = new BorderPane();
@@ -93,8 +104,14 @@ public class Main extends Application {
         VBox folderPane = new VBox();
         //Елемент інтерфейсу Label - відображає напис "Checksum type:"
         Label sumTypeL = new Label("Checksum type:");
-        Label col = new Label("TextTableColor:"); //Елемент інтерфейсу Label - відображає напис "TextTableColor:"
+        Label col = new Label("Text"); //Елемент інтерфейсу Label - відображає напис "TextTableColor:"
         col.setStyle("-fx-text-fill: #b9adb9");//зміна кольору
+        Label backCol = new Label("Background");
+        backCol.setStyle("-fx-text-fill: #b9adb9");
+        Label buttonCol = new Label("Buttons");
+        buttonCol.setStyle("-fx-text-fill: #b9adb9");//зміна кольору
+        Label tableCol = new Label("Table");
+        tableCol.setStyle("-fx-text-fill: #b9adb9");//зміна кольору
         //Метод, що встановлює стиль елементу інтерфейсу. Приймає CSS код. В даному випадку цей код встановлює
         //колір шрифту рівним #b9adb9
         sumTypeL.setStyle("-fx-text-fill: #b9adb9");
@@ -106,6 +123,7 @@ public class Main extends Application {
         ComboBox<String> sumTypeC = new ComboBox<>(sumTypeA);
         //Встановлюємо елемент за замовчуванням. Тобто, рядок "MD5" буде вибрано одразу.
         sumTypeC.setValue("MD5");
+        sumTypeC.setMaxWidth(105);
         //Створення кнопки, що містить напис "Create sums". За допомогою цієї кнопки користувач вибирає функцію створення
         //хеш-суми файлу\файлів.
         Button createSum = new Button("Create sums");
@@ -118,7 +136,7 @@ public class Main extends Application {
         verify.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
         //Створення кнопки, що містить напис "About". За допомогою цієї кнопки користувач вибирає функцію, що відкриває
         //інформацію про програму
-        Button about = new Button("About");
+        Button about = new Button("Apply Colors");
         //Встановлення кольору заднього фону, що рівний #585858 та кольору тексту, що рівний #b9adb9
         about.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
         //Створення елементу інтерфейсу, що дозволяє вибрати директорію
@@ -142,7 +160,6 @@ public class Main extends Application {
         Button selectDirB = new Button("Select Folder");
         //Встановлення кольору заднього фону, що рівний #585858 та кольору тексту, що рівний #b9adb9
         selectDirB.setStyle("-fx-background-color: #585858; -fx-text-fill: #b9adb9");
-
 
         //Встановлення опрацьовувача подій на кнопку, за допомогою якої вибирається коренева директорія. Для цього слід
         //викликати метод setOnAction, в який передається реалізація інтерфейсу EventHandler.
@@ -191,6 +208,32 @@ public class Main extends Application {
                 //Статичному полю key класу Controller присвоюємо значення false, що означає функцію програми - в даному
                 //випадку - підрахунок хеш-суми файлів
                 Controller.key = false;
+            }
+        });
+        about.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                textcolor = "-fx-text-fill: " + "#" +
+                        Integer.toHexString(textColor.getValue().hashCode()).substring(0, 6).toUpperCase();
+                backgroundcol = "-fx-fill: " + "#" +
+                        Integer.toHexString(backgroundColor.getValue().hashCode()).substring(0, 6).toUpperCase();
+                buttoncol = "-fx-background-color: " + "#" +
+                        Integer.toHexString(buttonColor.getValue().hashCode()).substring(0, 6).toUpperCase();
+                tablecol = "-fx-background-color: " + "#" +
+                        Integer.toHexString(tableColor.getValue().hashCode()).substring(0, 6).toUpperCase() +
+                        "; " + textcolor;
+                sumTypeL.setStyle(textcolor);
+                backCol.setStyle(textcolor);
+                buttonCol.setStyle(textcolor);
+                tableCol.setStyle(textcolor);
+                enterDir.setStyle(textcolor);
+                selectDir.setStyle(textcolor);
+                col.setStyle(textcolor);
+                background.setStyle(backgroundcol);
+                selectDirB.setStyle(textcolor + "; " + buttoncol);
+                createSum.setStyle(textcolor + "; " + buttoncol);
+                verify.setStyle(textcolor + "; " + buttoncol);
+                about.setStyle(textcolor + "; " + buttoncol);
             }
         });
         /**
@@ -246,19 +289,25 @@ public class Main extends Application {
         folderPane.getChildren().addAll(directoryT, selectDir, selectDirB);
         //Встановлення відступів для контейнера відносно сторін вікна додатку. З правого боку відступ дорівнює 20 пікселів,
         //з лівого - 80 пікселів
-        folderPane.setPadding(new Insets(0, 20, 0, 80));
+        folderPane.setPadding(new Insets(0, 20, 10, 80));
         //Встановлення відступів між елементами контейнера, що дорівнює 30 пікселів
         folderPane.setSpacing(30);
 
         //Додавання елементів до контейнеру, що працює за принципом таблиці. Для цього викликається метод add(), в який
         // передається елемент, що потрібно додати, номер стовпчика та номер рядка
-        grid.add(col, 1, 2);
         grid.add(sumTypeL, 1, 0);
         grid.add(sumTypeC, 2, 0);
         grid.add(createSum, 0, 1);
         grid.add(verify, 1, 1);
         grid.add(about, 2, 1);
-        grid.add(colorPicker,2,2);
+        grid.add(textColor,2,2);
+        grid.add(col, 1, 2);
+        grid.add(backgroundColor, 2, 3);
+        grid.add(backCol, 1, 3);
+        grid.add(buttonColor, 2, 4);
+        grid.add(buttonCol, 1, 4);
+        grid.add(tableColor, 2, 5);
+        grid.add(tableCol, 1, 5);
         //Встановлення сірої рамки навколо контейнера
         grid.setStyle("-fx-border-color: gray");
         grid.setHgap(5); //Встановлення відступу між стовпчиками - 5 пікселів
@@ -277,15 +326,13 @@ public class Main extends Application {
     public void start(Stage primaryStage){
         //Група компонентів, за допомогою яких користувач керує додатком. За правилом театру - група акторів постановки
         Group g = new Group();
-        //Прямокутник розміром 310, 310 с кольором заливки #424242, що є фоном всього вікна
-        Rectangle background = new Rectangle(310, 310, Color.web("#424242"));
         //Додаємо фон до групи
         g.getChildren().add(background);
         //Додаємо компоненти до групи
         g.getChildren().add(initDirectorySelection(primaryStage));
         //Створюємо об'єкт класу Scene, конструктор якого приймає контейнер з елементами та розмір вікна. За правилом
         //театру - це постанова, до якої ми додаємо групу акторів (контейнер з елементами інтерфейсу)
-        Scene scene = new Scene(g, 300, 300);
+        Scene scene = new Scene(g, 330, 390);
         //
         mainWindow = primaryStage;
         //Додаємо на сцену постанову
