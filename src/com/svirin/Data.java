@@ -1,78 +1,132 @@
 package com.svirin;
 
+import com.svirin.controller.Controller;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-
+/**
+ * клас Data використовується для отримання данних з файлу типу .md5
+ * виконує перетворення в потрібну форму хешу для подальшого порівняння
+ * повертає результати порівняння хешів вибраних файлів з хешами що знаходяться у вибраному файлі типу .md5
+ */
 public class Data {
+    /**Список рядків призначених для зберігання хешів в потрібній формі для порівняння */
     List<String> finalstr = new ArrayList<String>();
+    /**Список рядків для проміжного збереження інформації*/
     List<String> lines = new ArrayList<String>();
-    List<Boolean> state = new ArrayList<Boolean>();
-    List<String> names = new ArrayList<>();
-    List<String> hashes = new ArrayList<>();
+    /**список станів результатів порівняння хешів*/
+    public static List<Boolean> state = new ArrayList<Boolean>();
+    /**список для зберігання шляхів до перевіряємих файлів*/
+    public static List<String> names = new ArrayList<>();
+    /**список для зберігання хешів перевіряємих файлів*/
+    public static List<String> hashes = new ArrayList<>();
+    public static List<String> cause = new ArrayList<>();
+    /**рядкова змінна призначена для зберігання кореневої папки перевірки*/
     String rootfile = new String();
+    /**рядкова змінна що зберігає шлях до вибраного файлу типу .md5*/
     String md5 = new String();
+    /***/
     File temp;
 
     public Data(){}
+
+    /**
+     * конструктор для отримання та зберігання шляхів до вибраних файлів
+     * @param dir
+     * @param dir1
+     * @param dir2
+     */
     Data(File dir,String dir1,String dir2) {// input data from explorer
-         temp = new File(String.valueOf(dir));
-         md5 = dir1;
-         rootfile = dir2;
+        Controller.key = true;
+         temp = new File(String.valueOf(dir)); //перетворення та збереження файлу в тип String
+         md5 = dir1; //збереження шляху до файлу .md5
+         rootfile = dir2; //збереження кореневого шляху вибраної папки
     }
 
+    /**
+     * отримання хешів порівнюваних файлів
+     * формування хешів та назв файлів в потрібному для поріняння форматі
+     * реалізація порівняння хешів
+     * формування результатів порівняння
+     * @throws IOException
+     * @throws NoSuchAlgorithmException
+     */
     void transform() throws IOException, NoSuchAlgorithmException { //create line like *......
-        Main main = new Main();
-        String line;
-        BufferedReader reader = new BufferedReader(new FileReader(md5));
-        File[] array = temp.listFiles();
-        String files[] = Arrays.stream(array).map(File::getAbsolutePath)
-                .toArray(String[]::new);
-        rootfile += "\\";
-        int i = 0;
-        for(String a : files){
-            a = a.replace(rootfile,"");
-            finalstr.add(i," *" + a);
-            i++;
-        }
-
-         i = 0;
-        for (String a : files) {
-            a = main.md5(a);
-            files[i] = a;
-            i++;
-        }
-        for (i = 0;i<files.length;i++) {
-            finalstr.set(i,files[i] + finalstr.get(i));
-        }
-
+        String line; //змінна для проміжного запису результату
+        BufferedReader reader = new BufferedReader(new FileReader(md5));  // зчитування файлу .md5
+        List<String> files = new ArrayList<>();
+        /*порядкове зчитування данних з файлу*/
         while ((line = reader.readLine()) != null) {
             lines.add(line);
         }
-
-    //    String[] md5hashes = lines.toArray(new String[lines.size()]);
-        //check for equality
-        int z = 0;
-        for( i=1;i<lines.size();i++){
-            state.add(false);
-            for(int k=0;k<finalstr.size();k++){
-                if(lines.get(i).equals(finalstr.get(k))) {
-                    state.set(i - 1, true);
-                    names.add(lines.get(i).substring(33));
-                    hashes.add(finalstr.get(k).replace(names.get(z),""));
-                    System.out.println(hashes.get(z));
-                    z++;
-                }
+        /*запис хешу в порівнювані рядки*/
+        for(int i = 0; i < lines.size(); ++i) {
+            if(lines.get(i).isEmpty() || lines.get(i).charAt(0) == '#') continue;
+            if(Main.algorithm)
+                finalstr.add(lines.get(i).substring(33));
+            else
+                finalstr.add(lines.get(i).substring(41));
+        }
+        int i = 0;
+        /*
+        * формування остаточного вигляду рядка для порівняння
+        * додавання шляху в рядок
+        */
+        for (String a : finalstr) {
+            try{
+                if(Main.algorithm)
+                    finalstr.set(i, Main.md5(rootfile + "\\" + a.substring(1)) + " " + finalstr.get(i));
+                else
+                    finalstr.set(i, Main.createSha1((rootfile + "\\" + a.substring(1))) + " " + finalstr.get(i));
+                i++;
+                hashes.add("OK");
+            }
+            catch(IOException e){
+                finalstr.set(i, "00000000000000000000000000000000 " + finalstr.get(i));
+                hashes.add("File does not exist.");
             }
         }
-        System.out.println(state);
 
-
+        int z = 0;
+        boolean isEquals = true;
+        /*перевірка на рівність*/
+        for( i = 0;i<lines.size();i++){
+            if(lines.get(i).isEmpty() || lines.get(i).charAt(0) == '#') continue;
+            String bufName;
+            if(Main.algorithm) bufName = lines.get(i).substring(33);
+            else bufName = lines.get(i).substring(41);
+            for(int k=0;k<finalstr.size();k++){
+                if(lines.get(i).toUpperCase().equals(finalstr.get(k).toUpperCase())){
+                    state.add(true); //збереження стану результату
+                    /*отримання імен перевірених файлів*/
+                    names.add(bufName);
+                    hashes.set(z, finalstr.get(k).replace(names.get(z),"")); //отримання перевіреного хешу
+                    System.out.println(hashes.get(z));
+                    z++;
+                    isEquals = true;
+                    break;
+                }
+                isEquals = false;
+            }
+            /*при негативному результаті перевірки*/
+            if(!names.contains(bufName) && !isEquals && hashes.get(z).equals("OK")){
+                state.add(false); //запис стану результату
+                names.add(bufName); //ім'я файлу для виведення
+                hashes.set(z, "Checksum did not match."); // повідомлення про негативний результат
+                z++;
+            }
+            else if(!names.contains(bufName) && !isEquals && hashes.get(z).equals("File does not exist.")){
+                state.add(false); //запис стану результату
+                names.add(bufName); //ім'я файлу для виведення
+                hashes.set(z, "File does not exist."); // повідомлення про негативний результат
+                z++;
+            }
+        }
     }
 }
